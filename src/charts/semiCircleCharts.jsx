@@ -1,11 +1,11 @@
 import React from 'react';
-import './module/semiCircle.module.css';
+// import './module/semiCircle.module.css';
 const SemiCircleChart = ({ value }) => {
 
     return (
         <div
 
-            role="progressbar"
+            role="progress-bar"
             aria-valuenow={value}
             aria-valuemin="0"
             aria-valuemax="100"

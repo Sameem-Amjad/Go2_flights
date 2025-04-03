@@ -4,7 +4,7 @@ import { CiSquareInfo } from "react-icons/ci";
 import { TbListDetails } from "react-icons/tb";
 import { CiCircleInfo } from "react-icons/ci";
 import axios from "axios";
-import SemiCircleChart from "../charts/semiCircleCharts";
+import SemiCircleChart from "../charts/semiCircleCharts.jsx";
 
 const FlightOfferCard = ({ offer, data }) => {
   const [showModal, setShowModal] = useState(false);

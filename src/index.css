@@ -2,11 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/* 
 .no-scrollbar::-webkit-scrollbar {
-    display: none; /* Hide scrollbar in Chrome, Safari */
+    display: none;
   }
   .no-scrollbar {
-    -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
-    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+  } */
+@layer components {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  [role="progress-bar"] {
+    --percentage: var(--value);
+    --size: 300px;
+    width: var(--size);
+    aspect-ratio: 2 / 1;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  [role="progress-bar"]::after {
+    content: "";
+    width: 60%;
+    height: 10%;
+    position: absolute;
+    bottom: -5%;
+    left: 0;
+    background: 
+      radial-gradient(circle at 83.33333% 50%, #fff 4%, #000 0 5%, #0000 0),
+      conic-gradient(at -20% 50%, #0000 88deg, #000 88.25deg 91.75deg, #0000 92deg);
+    transform-origin: 83.33333% 50%;
+    transform: rotate(calc(var(--value) * 180deg / 100))
+  }
+
+  [role="progress-bar"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: conic-gradient(
+      #ff0037 0deg 75deg,
+      rgb(160, 0, 0) 75deg 180deg,
+      green 180deg 285deg,
+      orange 285deg 360deg
+    );
+    -webkit-mask: radial-gradient(at 50% 100%, transparent 55%, black 56%);
+    mask: radial-gradient(at 50% 100%, transparent 55%, black 56%);
+    border-radius: 50% / 100% 100% 0 0;
+  }
+
+  .progressbar {
+    --size: 300px;
+    width: var(--size);
+    aspect-ratio: 2 / 1;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    border-radius: 50% / 100% 100% 0 0;
+    overflow: hidden;
+  }
+
+  .progressbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: conic-gradient(
+      green 0deg 90deg,
+      yellow 90deg 180deg,
+      orange 180deg 270deg,
+      red 270deg 360deg
+    );
+    clip-path: polygon(0% 100%, 100% 100%, 50% 0%);
+  }
+}
+
+@media (max-width: 400px) {
+  [role="progress-bar"],
+  .progressbar {
+    --size: 150px;
+  }
+}

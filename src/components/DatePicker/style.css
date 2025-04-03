@@ -1,0 +1,58 @@
+.rmdp-today  span{
+    background-color:white !important;
+    color:#525B31 !important;
+    font-weight: 700 !important;
+}
+.rmdp-header-values {
+    border-bottom: 1px solid #525B31;
+    width: 80%;
+}
+ 
+.rmdp-range {
+    background-color: #D2B57A !important;
+    opacity: 1 !important;
+    border:0px !important;
+    margin:0px !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important
+}
+.start {
+    position: relative !important;
+}
+.start span, .end span {
+    background-color: #917846 !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin-left: -3px !important;
+    margin-top: -3px !important;
+    padding: 0  !important;
+    position: absolute !important;
+    color: white  !important;
+    z-index: 1 !important; 
+
+}
+
+.rmdp-header-values span{
+    color: #525B31;
+    font-weight: 700;
+}
+
+.rmdp-week div {
+    color: #525B31;
+    margin-bottom:2px  !important; 
+}
+
+.rmdp-week-day{
+    color: #4F5831;
+}
+.rmdp-input {
+    width: 170px; 
+    height: 50px;  
+    font-size: 13px;
+}
+
+.rmdp-input::placeholder{
+    color:rgb(210, 181, 122);
+}

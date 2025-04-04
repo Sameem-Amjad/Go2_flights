@@ -24,7 +24,7 @@ export const FlightsProvider = ({ children }) => {
         ? parsedDates.map((dateStr) => new Date(dateStr))
         : [new Date(parsedDates)]; // Wrap in array for single date
     }
-    return null; // If no stored dates, return null
+    return []; // If no stored dates, return null
   });
 
   // State for guest information
@@ -41,7 +41,7 @@ export const FlightsProvider = ({ children }) => {
   });
 
   // State for search query
-  const [searchQuery, setSearchQuery] = useState(() => {   
+  const [searchQuery, setSearchQuery] = useState(() => {
     const storedQuery = localStorage.getItem("searchQuery");
     return storedQuery ? JSON.parse(storedQuery) : "";
   });
@@ -69,7 +69,7 @@ export const FlightsProvider = ({ children }) => {
 
   // Persist guest information to localStorage
   useEffect(() => {
-    console.log(guest);
+    // console.log(guest);
     if (guest && Object.keys(guest).length) {
       localStorage.setItem("guest", JSON.stringify(guest));
     } else {
@@ -81,7 +81,7 @@ export const FlightsProvider = ({ children }) => {
     const storedGuest = localStorage.getItem("guest");
     // return storedGuest ? JSON.parse(storedGuest) : { adults: 1, children: 0, rooms: 0 };
     setGuest(storedGuest)
-    console.log(guest);
+    // console.log(guest);
     if (guest && Object.keys(guest).length) {
       localStorage.setItem("guest", JSON.stringify(guest));
     } else {
@@ -99,11 +99,11 @@ export const FlightsProvider = ({ children }) => {
 
   // Persist searchQuery to localStorage
   useEffect(() => {
-    console.log("ran");
-    
+    // console.log("ran");
+
     if (searchQuery) {
       localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
-    } else {     
+    } else {
       localStorage.removeItem("searchQuery");
     }
   }, [searchQuery]);
@@ -146,9 +146,9 @@ export const FlightsProvider = ({ children }) => {
         setTripType,
         setIsSearched,
         isSearched,
-        loading, 
+        loading,
         setLoading,
-        error, 
+        error,
         setError,
         isSearchClicked,
         setIsSearchClicked,

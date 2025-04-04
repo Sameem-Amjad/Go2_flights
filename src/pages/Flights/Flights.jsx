@@ -6,6 +6,7 @@ import Filter from "./components/Filters";
 import RoundTripFlightOfferCard from "../../Cards/FlightOffersRoundTrip";
 import Pagination from "../../components/Pagination/Pagination"; // Ensure you have this component
 import { toast } from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const FlightOffersList = () => {
   const [response, setResponse] = useState(null);
@@ -15,6 +16,7 @@ const FlightOffersList = () => {
   const [minPrice, setMinPrice] = useState();
   const [maxPrice, setMaxPrice] = useState();
   const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
+  const navigate = useNavigate()
   const {
     selectedDates,
     guest,
@@ -32,7 +34,7 @@ const FlightOffersList = () => {
     setSearchQuery,
     setToQuery
   } = useContext(FlightsContext);
-  const [departureDate, setDepartureDate] = useState(selectedDates[0]);
+  const [departureDate, setDepartureDate] = useState(selectedDates[0] || null);
   const [returnDate, setReturnDate] = useState(
     selectedDates.length > 1 ? selectedDates[1] : null
   );
@@ -43,7 +45,18 @@ const FlightOffersList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterVisible, setFilterVisible] = useState(false);
   const [applyFilter, setApplyFilter] = useState(false);
+  const location = useLocation();
+  const [firstLoad, setFirstLoad] = useState(false);
+
+
   let newPassengers = [];
+
+  useEffect(() => {
+    if (location.state?.firstLoad) {
+      setFirstLoad(true);
+    }
+    navigate(location.pathname, { replace: true, state: { firstLoad: false } });
+  }, []);
 
   useEffect(() => {
     if (response !== null) {
@@ -78,7 +91,7 @@ const FlightOffersList = () => {
     }
     console.log(newPassengers);
 
-    setTimeout(() => {}, 1000);
+    setTimeout(() => { }, 1000);
     console.log(newPassengers);
   }, [guest]);
 
@@ -86,69 +99,78 @@ const FlightOffersList = () => {
     const previousFromCity = JSON.parse(localStorage.getItem("previousFrom")) || ""
     const previousToCity = JSON.parse(localStorage.getItem("previousTo")) || ""
 
-    if (type === 'origin' && city === previousFromCity.city){
+    if (type === 'origin' && city === previousFromCity.city) {
       return previousFromCity.iata
     }
-    if (type === 'destination' && city === previousToCity.city){
+    if (type === 'destination' && city === previousToCity.city) {
       return previousToCity.iata
     }
     try {
-      const response = await axios.get(
-        "https://api.api-ninjas.com/v1/airports",
-        {
-          headers: { "X-Api-Key": import.meta.env.VITE_AIRPORT_API },
-          params: { city },
-        }
-      );
-  
-      if (response.data.length > 0) {
-        // Iterate over the data to find the first non-empty IATA code
-        const validIATA = response.data.find((airport) => airport.iata !== "");
-        if (validIATA) {
-          console.log(`First valid airport in ${city}: ${validIATA.iata}`);
-          type === "origin" ? await setSearchQuery(validIATA.iata) : await setToQuery(validIATA.iata);
-          if (type === "origin"){
-            localStorage.setItem("previousFrom", JSON.stringify({city: city, iata: validIATA.iata}))
+      if (city) {
+        const response = await axios.get(
+          "https://api.api-ninjas.com/v1/airports",
+          {
+            headers: { "X-Api-Key": import.meta.env.VITE_AIRPORT_API },
+            params: { city },
           }
-          if (type === "destination"){
-            localStorage.setItem("previousTo", JSON.stringify({city: city, iata: validIATA.iata}))
+        );
+
+        if (response?.data?.length > 0) {
+          // Iterate over the data to find the first non-empty IATA code
+          const validIATA = response.data.find((airport) => airport.iata !== "");
+          if (validIATA) {
+            console.log(`First valid airport in ${city}: ${validIATA.iata}`);
+            type === "origin" ? await setSearchQuery(validIATA.iata) : await setToQuery(validIATA.iata);
+            if (type === "origin") {
+              localStorage.setItem("previousFrom", JSON.stringify({ city: city, iata: validIATA.iata }))
+            }
+            if (type === "destination") {
+              localStorage.setItem("previousTo", JSON.stringify({ city: city, iata: validIATA.iata }))
+            }
+            console.log(response.data);
+
+            return validIATA.iata;
+          } else {
+            console.log(`No valid IATA codes found in ${city}.`);
+            return null;
           }
-          console.log(response.data);
-          
-          return validIATA.iata;
         } else {
-          console.log(`No valid IATA codes found in ${city}.`);
+          console.log(`No airports found in ${city}.`);
           return null;
         }
-      } else {
-        console.log(`No airports found in ${city}.`);
-        return null;
       }
     } catch (error) {
       console.error("Error fetching airport data:", error.message);
       return null;
     }
   };
-  
+
 
   const fetchPaginatedData = async () => {
     setLoading(true);
     setError(null);
     try {
       const obj = { data };
-  
-      if (selectedDates.length > 1 && tripType === "roundTrip") {
+      console.log("Request Payload:", obj); // Log the payload
+      console.log("Request Params:", { id, limit, page, sortBy: selectedSortValue });
+      if (!id || id === 'undefined') {
+
+        setLoading(false);
+
+        return;
+      }
+      if (selectedDates?.length > 1 && tripType === "roundTrip") {
         console.log(obj, id, limit, page, selectedSortValue);
         const res = await axios.post(
           `${import.meta.env.VITE_BASE_URL}flights/list`,
           Object.keys(obj).length > 0
             ? obj
             : {
-                cabin_class: ["economy", "premium_economy", "business", "first"],
-                base_amount: [0, 100000],
-                stops: [],
-                airlines: [],
-              },
+              cabin_class: ["economy", "premium_economy", "business", "first"],
+              base_amount: [0, 100000],
+              stops: [],
+              airlines: [],
+            },
           {
             params: {
               id: id,
@@ -160,13 +182,14 @@ const FlightOffersList = () => {
         );
         if (res) {
           console.log("1:", res);
-  
+
           // Append new data to existing response
           setResponse((prevResponse) => [
             ...(prevResponse) || [],
             ...res.data.data.data,
           ]);
-  
+          setFirstLoad(false)
+
           setMinPrice(
             Math.floor(res?.data?.data?.meta.minPrice).toFixed(0) - 100
           );
@@ -182,7 +205,7 @@ const FlightOffersList = () => {
         toast.error("Please select Complete Date and Both Locations");
         setLoading(false);
       }
-  
+
       if (
         selectedDates.length <= 2 &&
         selectedDates.length !== 0 &&
@@ -203,13 +226,14 @@ const FlightOffersList = () => {
         );
         if (res) {
           console.log("2:", res);
-  
+
           // Append new data to existing response
           setResponse((prevResponse) => [
             ...(prevResponse) || [],
             ...res.data.data.data,
           ]);
-  
+          setFirstLoad(false)
+
           setMinPrice(
             Math.floor(res?.data?.data?.meta.minPrice).toFixed(0) - 100
           );
@@ -222,6 +246,8 @@ const FlightOffersList = () => {
           );
         }
       } else if (tripType === "oneWay" && selectedDates.length > 1) {
+        console.log("Please select Complete Departure date only");
+        setLoading(false);
         toast.error("Please select Complete Departure date only");
       }
     } catch (error) {
@@ -233,7 +259,7 @@ const FlightOffersList = () => {
       setLoading(false);
     }
   };
-  
+
 
   const formatDate = (date) => {
     if (!(date instanceof Date)) {
@@ -262,44 +288,45 @@ const FlightOffersList = () => {
       setResponse(null)
       setLoading(true);
       setError(null);
+      console.log("Selected Dates:", selectedDates);
       try {
         const originIATA =
           searchQuery.length === 3
             ? searchQuery
-            : await getAirportData(searchQuery, 'origin'); 
+            : await getAirportData(searchQuery, 'origin');
         const destinationIATA =
           toQuery.length === 3 ? toQuery : await getAirportData(toQuery, 'destination');
         const requestData =
           tripType === "oneWay"
             ? {
-                data: {
-                  slices: [
-                    {
-                      origin: originIATA,
-                      destination: destinationIATA,
-                      departure_date: departureDate,
-                    },
-                  ],
-                  passengers: passengers,
-                },
-              }
+              data: {
+                slices: [
+                  {
+                    origin: originIATA,
+                    destination: destinationIATA,
+                    departure_date: departureDate || selectedDates[0],
+                  },
+                ],
+                passengers: passengers,
+              },
+            }
             : {
-                data: {
-                  slices: [
-                    {
-                      origin: originIATA,
-                      destination: destinationIATA,
-                      departure_date: departureDate,
-                    },
-                    {
-                      origin: destinationIATA,
-                      destination: originIATA,
-                      departure_date: returnDate,
-                    },
-                  ],
-                  passengers: passengers,
-                },
-              };
+              data: {
+                slices: [
+                  {
+                    origin: originIATA,
+                    destination: destinationIATA,
+                    departure_date: departureDate || selectedDates[0],
+                  },
+                  {
+                    origin: destinationIATA,
+                    destination: originIATA,
+                    departure_date: returnDate,
+                  },
+                ],
+                passengers: passengers,
+              },
+            };
 
         if (selectedDates.length > 1 && tripType === "roundTrip") {
           const res = await axios.post(
@@ -309,6 +336,8 @@ const FlightOffersList = () => {
           if (res) {
             console.log(res);
             setResponse(res.data.data.data);
+            setFirstLoad(false)
+
             setTotalPages(res.data?.data?.meta?.totalPages);
             setId(res.data.data.meta.id);
             setMinPrice(
@@ -316,7 +345,7 @@ const FlightOffersList = () => {
             );
             setMaxPrice(
               Number(Math.floor(res?.data?.data?.meta.maxPrice).toFixed(0)) +
-                100
+              100
             );
             setPriceRange(
               Math.floor(res?.data?.data?.meta.minPrice).toFixed(0) - 100,
@@ -331,21 +360,25 @@ const FlightOffersList = () => {
           selectedDates.length !== 0 &&
           tripType === "oneWay"
         ) {
+          console.log("Request Payload:", requestData); // Log the payload
           const res = await axios.post(
             `${import.meta.env.VITE_BASE_URL}flights/createOfferRequest`,
             requestData
           );
           if (res) {
-            console.log(res);
+            console.log("res", res);
             setTotalPages(res.data?.data?.meta?.totalPages);
             setId(res.data.data.meta.id);
             setResponse(res?.data?.data?.data);
+            setFirstLoad(false)
+
+
             setMinPrice(
               Math.floor(res?.data?.data?.meta.minPrice).toFixed(0) - 100
             );
             setMaxPrice(
               Number(Math.floor(res?.data?.data?.meta.maxPrice).toFixed(0)) +
-                100
+              100
             );
             console.log(res?.data?.data?.meta.maxPrice);
 
@@ -364,6 +397,8 @@ const FlightOffersList = () => {
           setLoading(false);
         } else {
           setError("An unexpected error occurred."); // General error message
+          navigate("/")
+          console.log("An unexpected error occurred.sameem")
           setLoading(false);
         }
       }
@@ -405,7 +440,7 @@ const FlightOffersList = () => {
           </button>
         </div>
         {/* Filter component shown as a card on mobile */}
-        {filterVisible && (
+        {filterVisible && response && (
           <div className="bg-white shadow-md rounded-lg p-4 lg:hidden">
             <Filter
               flights={response}
@@ -419,14 +454,18 @@ const FlightOffersList = () => {
         )}
         {/* Always show the Filter component on larger screens */}
         <div className="hidden lg:block">
-          <Filter
-            flights={response}
-            setFilteredData={setFilters}
-            applyFilter={applyFilter}
-            setApplyFilter={setApplyFilter}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-          />
+
+          {response && (
+
+            <Filter
+              flights={response}
+              setFilteredData={setFilters}
+              applyFilter={applyFilter}
+              setApplyFilter={setApplyFilter}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+            />
+          )}
         </div>
       </div>
       <div className="w-full lg:w-8/12">
@@ -452,9 +491,8 @@ const FlightOffersList = () => {
     h-20 sm:h-24 lg:h-28
     w-full sm:w-1/2 md:w-1/3 lg:w-3/12
     text-sm sm:text-base lg:text-lg
-    ${
-      selectedSortValue === "cheapest" ? "border-[3px] border-custom-gold" : ""
-    }`}
+    ${selectedSortValue === "cheapest" ? "border-[3px] border-custom-gold" : ""
+              }`}
             onClick={() => handleOrderByFlights("cheapest")}
           >
             Cheapest
@@ -470,9 +508,8 @@ const FlightOffersList = () => {
     h-20 sm:h-24 lg:h-28
     w-full sm:w-1/2 md:w-1/3 lg:w-3/12
     text-sm sm:text-base lg:text-lg
-    ${
-      selectedSortValue === "quickest" ? "border-[3px] border-custom-gold" : ""
-    }`}
+    ${selectedSortValue === "quickest" ? "border-[3px] border-custom-gold" : ""
+              }`}
             onClick={() => handleOrderByFlights("quickest")}
           >
             Quickest
@@ -489,26 +526,30 @@ const FlightOffersList = () => {
           </div>
         ) : error ? (
           <p className="text-red-600 text-center text-2xl">{error}</p> // Display error message
-        ) : response && response.length > 0 ? (
-          response.length > 0 ? (
-            response.map((offer) =>
+        ) : response && response?.length > 0 ? (
+          response?.length > 0 ? (
+            response?.map((offer, index) =>
               tripType === "roundTrip" &&
-              selectedDates.length === 2 &&
-              isSearchClicked ? (
+                selectedDates.length === 2 &&
+                isSearchClicked ? (
                 <RoundTripFlightOfferCard
-                  key={offer.id}
+                  key={index}
                   offer={offer}
                   data={data}
                 />
               ) : (
-                <FlightOfferCard key={offer.id} offer={offer} data={data} />
+                <FlightOfferCard keyindex={index} offer={offer} data={data} />
               )
             )
           ) : (
-            <p className="text-center text-2xl">No results found</p>
+            <p className="text-center text-2xl">No results found.sameem</p>
           )
         ) : (
-          <p className="text-center text-2xl">No results found</p>
+          firstLoad ? (
+            <div className="flex justify-center items-center min-h-[70vh]">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-yellow-500"></div>
+            </div>) :
+            <p className="text-center text-2xl">No results found</p>
         )}
         {totalPages > 1 && !error && response?.length > 0 && !loading && (
           <Pagination

@@ -15,7 +15,6 @@ import airplane from "../../assets/png/takeoff.png";
 import landing from "../../assets/png/landing.png";
 import flighttype from "../../assets/png/flight.png";
 import CitySearch from "../../CitySearch"
-
 const Navbar = () => {
   const [activeLink, setActiveLink] = useState("home");
   const [isDropDownOpenForMobile, setIsDropDownOpenForMobile] = useState(false);
@@ -80,9 +79,9 @@ const Navbar = () => {
   const handleSearchResults = () => {
     console.log(destination, toLocation, selectedDates, guest);
 
-    if (!selectedDates){
+    if (!selectedDates || selectedDates.length === 0) {
       setSelectedDates([new Date()])
-      setTimeout(()=>{},1000)
+      setTimeout(() => { }, 1000)
     }
 
     if (!destination || !toLocation || !guest) {
@@ -98,7 +97,8 @@ const Navbar = () => {
       setFilteredData()
       setSearchQuery(destination);
       setToQuery(toLocation);
-      navigate("/flights-offers");
+      console.log(location)
+      location == '/flights-offers' ? navigate("/flights-offers", { state: { "firstLoad": false } }) : navigate("/flights-offers", { state: { "firstLoad": true } });
     }
   };
 
@@ -136,45 +136,40 @@ const Navbar = () => {
             </Link>
             <ul className="text-white font-semibold text-[15px] flex flex-row space-x-1 relative">
               <li
-                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${
-                  activeLink === "home"
-                    ? "text-[#D2B57A] bg-white"
-                    : "hover:text-[#D2B57A]"
-                }`}
+                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${activeLink === "home"
+                  ? "text-[#D2B57A] bg-white"
+                  : "hover:text-[#D2B57A]"
+                  }`}
                 onClick={() => handleLinkClick("home")}
               >
                 <Link to={"/"} className="relative z-10 font-p">
                   Home
                   <span
-                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${
-                      activeLink === "home" ? "w-full" : "w-0"
-                    }`}
+                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${activeLink === "home" ? "w-full" : "w-0"
+                      }`}
                   ></span>
                 </Link>
               </li>
               <li
-                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${
-                  activeLink === "about"
-                    ? "text-[#D2B57A] bg-white"
-                    : "hover:text-[#D2B57A]"
-                }`}
+                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${activeLink === "about"
+                  ? "text-[#D2B57A] bg-white"
+                  : "hover:text-[#D2B57A]"
+                  }`}
                 onClick={() => handleLinkClick("about")}
               >
                 <a href="#" className="relative z-10 font-inter">
                   About
                   <span
-                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${
-                      activeLink === "about" ? "w-full" : "w-0 hover:w-full"
-                    }`}
+                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${activeLink === "about" ? "w-full" : "w-0 hover:w-full"
+                      }`}
                   ></span>
                 </a>
               </li>
               <li
-                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${
-                  activeLink === "help"
-                    ? "text-[#D2B57A] bg-white"
-                    : "hover:text-[#D2B57A]"
-                }`}
+                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${activeLink === "help"
+                  ? "text-[#D2B57A] bg-white"
+                  : "hover:text-[#D2B57A]"
+                  }`}
                 onClick={() => handleLinkClick("help")}
               >
                 <a
@@ -183,9 +178,8 @@ const Navbar = () => {
                 >
                   Help
                   <span
-                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${
-                      activeLink === "help" ? "w-full" : "w-0"
-                    }`}
+                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${activeLink === "help" ? "w-full" : "w-0"
+                      }`}
                   ></span>
                 </a>
               </li>
@@ -225,45 +219,40 @@ const Navbar = () => {
             </Link>
             <ul className="text-white font-semibold text-[15px] flex flex-row space-x-1 relative">
               <li
-                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${
-                  activeLink === "home"
-                    ? "text-[#D2B57A] bg-white"
-                    : "hover:text-[#D2B57A]"
-                }`}
+                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${activeLink === "home"
+                  ? "text-[#D2B57A] bg-white"
+                  : "hover:text-[#D2B57A]"
+                  }`}
                 onClick={() => handleLinkClick("home")}
               >
                 <Link to={"/"} className="relative z-10 font-p">
                   Home
                   <span
-                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${
-                      activeLink === "home" ? "w-full" : "w-0"
-                    }`}
+                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${activeLink === "home" ? "w-full" : "w-0"
+                      }`}
                   ></span>
                 </Link>
               </li>
               <li
-                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${
-                  activeLink === "about"
-                    ? "text-[#D2B57A] bg-white"
-                    : "hover:text-[#D2B57A]"
-                }`}
+                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${activeLink === "about"
+                  ? "text-[#D2B57A] bg-white"
+                  : "hover:text-[#D2B57A]"
+                  }`}
                 onClick={() => handleLinkClick("about")}
               >
                 <a href="#" className="relative z-10 font-inter">
                   About
                   <span
-                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${
-                      activeLink === "about" ? "w-full" : "w-0 hover:w-full"
-                    }`}
+                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${activeLink === "about" ? "w-full" : "w-0 hover:w-full"
+                      }`}
                   ></span>
                 </a>
               </li>
               <li
-                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${
-                  activeLink === "help"
-                    ? "text-[#D2B57A] bg-white"
-                    : "hover:text-[#D2B57A]"
-                }`}
+                className={`group w-[63px] h-[28px] hover:bg-white flex justify-center items-center relative cursor-pointer transition-all duration-200 rounded-[5px] ${activeLink === "help"
+                  ? "text-[#D2B57A] bg-white"
+                  : "hover:text-[#D2B57A]"
+                  }`}
                 onClick={() => handleLinkClick("help")}
               >
                 <a
@@ -272,9 +261,8 @@ const Navbar = () => {
                 >
                   Help
                   <span
-                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${
-                      activeLink === "help" ? "w-full" : "w-0"
-                    }`}
+                    className={`absolute mt-[20px] left-0 right-0 h-[1px] bg-[#D2B57A] transition-all duration-200 w-0 group-hover:w-full ${activeLink === "help" ? "w-full" : "w-0"
+                      }`}
                   ></span>
                 </a>
               </li>
@@ -306,9 +294,8 @@ const Navbar = () => {
                   Flight
                 </p>
                 <span
-                  className={`block h-[2px] bg-white left-0 right-0 transition-all duration-200 w-0 group-hover:w-full ${
-                    subActiveLink === "flight" ? "w-full" : "w-0"
-                  }`}
+                  className={`block h-[2px] bg-white left-0 right-0 transition-all duration-200 w-0 group-hover:w-full ${subActiveLink === "flight" ? "w-full" : "w-0"
+                    }`}
                 ></span>
               </a>
             </li>
@@ -553,7 +540,7 @@ const Navbar = () => {
                         value={destination}
                         onChange={(text) => setDestination(text.target.value)}
                       /> */}
-                      <CitySearch type="from" destinationSetter={destinationSetter} originSetter={originSetter}/>
+                      <CitySearch type="from" destinationSetter={destinationSetter} originSetter={originSetter} />
                     </div>
                   </div>
 
@@ -572,7 +559,7 @@ const Navbar = () => {
                         value={toLocation}
                         onChange={(text) => setToLocation(text.target.value)}
                       /> */}
-                      <CitySearch type="to" destinationSetter={destinationSetter} originSetter={originSetter}/>
+                      <CitySearch type="to" destinationSetter={destinationSetter} originSetter={originSetter} />
                     </div>
                   </div>
                 </div>
@@ -800,7 +787,7 @@ const Navbar = () => {
                   value={destination}
                   onChange={(text) => setDestination(text.target.value)}
                 /> */}
-                <CitySearch type="from" destinationSetter={destinationSetter} originSetter={originSetter}/>
+                <CitySearch type="from" destinationSetter={destinationSetter} originSetter={originSetter} />
               </div>
             </div>
 
@@ -819,7 +806,7 @@ const Navbar = () => {
                   value={toLocation}
                   onChange={(text) => setToLocation(text.target.value)}
                 /> */}
-                <CitySearch type="to" destinationSetter={destinationSetter} originSetter={originSetter}/>
+                <CitySearch type="to" destinationSetter={destinationSetter} originSetter={originSetter} />
               </div>
             </div>
           </div>

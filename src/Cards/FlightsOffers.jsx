@@ -6,7 +6,7 @@ import { CiCircleInfo } from "react-icons/ci";
 import axios from "axios";
 import SemiCircleChart from "../charts/semiCircleCharts.jsx";
 
-const FlightOfferCard = ({ offer, data }) => {
+const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [showModal, setShowModal] = useState(false);
   const {
     total_amount,
@@ -25,12 +25,12 @@ const FlightOfferCard = ({ offer, data }) => {
   const finalSegment = firstSlice.segments[firstSlice.segments.length - 1];
   const { arriving_at } = finalSegment;
   const [showDeals, setShowDeals] = useState(false);
-  const [riskDetails, setRiskDetails] = useState(false);
   const [filter, setFilter] = useState(data);
   const [riskData, setRiskData] = useState([]);
+  const [riskDetails, setRiskDetails] = useState(false);
   const [termininalDetails, setTerminalDetails] = useState(false);
-  const [riskValueDetails, setRiskValueDetails] = useState({});
   const [additionalDetails, setAdditionalDetails] = useState(false)
+  const [riskValueDetails, setRiskValueDetails] = useState({});
   const [selectedRoutine, setSelectedRoutine] = useState("normal");
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const FlightOfferCard = ({ offer, data }) => {
   };
 
   return (
-    <div className="mb-4 shadow-md">
+    <div key={keyindex} className="mb-4 shadow-md">
       <div className="bg-white rounded-lg p-4 flex flex-col md:flex-row relative">
         <div className="flex-shrink-0 flex justify-center items-center mb-4 md:mb-0 md:mr-4">
           <div className="flex-shrink-0 flex justify-center items-center mb-4 md:mb-0 md:mr-4">
@@ -164,7 +164,7 @@ const FlightOfferCard = ({ offer, data }) => {
                 <div className="text-center">
                   {uniqueAirlines.map((name, index) => (
                     <p
-                      key={index}
+                      key={`${name}-${index}`}
                       className="text-xs font-semibold text-custom-green"
                     >
                       {name}
@@ -245,7 +245,7 @@ const FlightOfferCard = ({ offer, data }) => {
                       );
                       return (
                         <div
-                          key={index}
+                          key={`${segment.destination.iata_code}-${index}`}
                           className="text-[10px] text-gray-400 text-center"
                         >
                           {segment.destination.iata_code}{" "}
@@ -325,7 +325,7 @@ const FlightOfferCard = ({ offer, data }) => {
               </button>
               {
                 slices.map((slice, sliceIndex) => (
-                  <><div key={sliceIndex} className="mt-6 ">
+                  <><div key={`${sliceIndex}-slices`} className="mt-6 ">
                     {
                       slice?.segments?.length > 1 && <button onClick={() => calculateRisk(slice)} className="mt-2 bg-red-400 text-white text-xs px-1 py-1  rounded hover:bg-red-600 flex items-center justify-center gap-1">
                         <CiSquareInfo size={15} />
@@ -350,15 +350,13 @@ const FlightOfferCard = ({ offer, data }) => {
                   </>
 
                 ))
-
-
               }
 
             </div>
             <div className={` ${riskDetails ? 'flex w-full flex-col gap-5' : 'hidden'}  items-center justify-between text-gray-600 shadow-lg  rounded-lg p-2 mt-4`}>
 
               {riskData.map((risk, index) => (
-                <div key={index} className="w-full text-justify">
+                <div key={`${index}-${risk?.data?.data?.totalAvailableTime}`} className="w-full text-justify">
                   <p className="text-sm font-semibold">
                     Available Layover Time: {`${Math.floor(risk?.data?.data?.totalAvailableTime / 60)} hr ${risk?.data?.data?.totalAvailableTime % 60} min`}
                   </p>
@@ -423,7 +421,7 @@ const FlightOfferCard = ({ offer, data }) => {
                     if (!travel) return null;
 
                     return (
-                      <div key={index} className="w-full p-2 border-b last:border-none">
+                      <div key={`${index}-segment`} className="w-full p-2 border-b last:border-none">
                         {travel.airportName && (
                           <p className="text-sm font-bold">Airport: <span className="font-normal">{travel.airportName}</span></p>
                         )}
@@ -540,7 +538,7 @@ const FlightOfferCard = ({ offer, data }) => {
                 </button>
               </div>
               {slices.map((slice, sliceIndex) => (
-                <div key={sliceIndex} className="mt-6">
+                <div key={`${sliceIndex}-Terminal`} className="mt-6">
                   <h3 className="text-xl font-bold text-custom-gold mb-4">
                     {sliceIndex === 0 ? "Outbound Flight" : "Return Flight"}
                   </h3>

@@ -34,6 +34,18 @@ const AirportSearch = ({ type, destinationSetter, originSetter }) => {
     }
   };
 
+  // useEffect(() => {
+  //   const handleBeforeUnload = (event) => {
+  //     localStorage.setItem("searchQuery", JSON.stringify(inputValue));
+  //     localStorage.setItem("toQuery", JSON.stringify(inputValue));
+  //   };
+
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [])
   useEffect(() => {
     if (window.location.pathname === "/") {
       setInputValue("");
@@ -54,7 +66,7 @@ const AirportSearch = ({ type, destinationSetter, originSetter }) => {
       setError(null);
 
       try {
-        setTimeout(() => {}, 1000);
+        setTimeout(() => { }, 1000);
         const response = await axios.get(
           `https://api.amadeus.com/v1/reference-data/locations`,
           {
@@ -68,7 +80,7 @@ const AirportSearch = ({ type, destinationSetter, originSetter }) => {
             },
           }
         );
-        console.log(response.data.data);
+        // console.log(response.data.data);
 
         setSuggestions(
           response.data.data

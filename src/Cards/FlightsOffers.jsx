@@ -86,7 +86,6 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
     const departure = DateTime.fromISO(segment2.departing_at);
     return departure.diff(arrival, ["hours", "minutes"]).toObject();
   };
-
   const calculateRisk = async (slice) => {
     const { segments } = slice;
     const riskPromises = segments.map((segment, index) => {
@@ -103,7 +102,19 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
         //   arrivalTime: segment.arriving_at,
         //   departureTime: segments[index + 1].departing_at
         // })
-        // const flightData = 
+        const flightData = [{}]
+        const flightsDetails = segments[index + 1];
+        if (flightsDetails) {
+          flightData.push({
+            flight: flightsDetails.marketing_carrier_flight_number,
+            airline: flightsDetails.operating_carrier.name,
+            departing_at: flightsDetails.departing_at,
+            arriving_at: flightsDetails.arriving_at,
+            origin: flightsDetails.origin.iata_code,
+            destination: flightsDetails.destination.iata_code,
+            terminal: flightsDetails.destination_terminal
+          })
+        }
         return axios.post(
           `${import.meta.env.VITE_BASE_URL}transferRisk/calculate-risk`,
           {
@@ -112,8 +123,11 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
             departureTime: segments[index + 1].departing_at
           }
         ).then(response => ({
+
           index,
+
           data: response.data,
+          flightData: flightData[1],
 
         })).catch(error => ({
           index,
@@ -393,7 +407,21 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
             <div className={` ${riskDetails ? 'flex w-full flex-col gap-5' : 'hidden'}  items-center justify-between text-gray-600 shadow-lg  rounded-lg p-2 mt-4`}>
 
               {riskData.map((risk, index) => (
-                <div key={`${index}-${risk?.data?.data?.totalAvailableTime}`} className="w-full text-justify">
+                <div key={`${index}-${risk?.data?.data?.totalAvailableTime}`} className="w-full text-justify ">
+                  <div className="flex flex-wrap  justify-between items-center my-2">
+                    <p className="text-sm font-semibold">
+                      Airline: <span className="font-thin">{risk?.flightData?.airline}</span>
+                    </p>
+                    <p className="text-sm font-semibold">
+                      Flight: <span className="font-thin">{risk?.flightData?.flight}</span>
+                    </p>
+                    <p className="text-sm font-semibold">
+                      Origin: <span className="font-thin">{risk?.flightData?.origin}</span>
+                    </p>
+                    <p className="text-sm font-semibold">
+                      Destination:<span className="font-thin"> {risk?.flightData?.destination}</span>
+                    </p>
+                  </div>
                   <p className="text-sm font-semibold">
                     Available Layover Time: {`${Math.floor(risk?.data?.data?.totalAvailableTime / 60)} hr ${risk?.data?.data?.totalAvailableTime % 60} min`}
                   </p>

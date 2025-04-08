@@ -32,6 +32,8 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [additionalDetails, setAdditionalDetails] = useState(false)
   const [riskValueDetails, setRiskValueDetails] = useState({});
   const [selectedRoutine, setSelectedRoutine] = useState("normal");
+  const [selectedSlice, setSelectedSlice] = useState({})
+  const [selectedSliceIndex, setSelectedSliceIndex] = useState(0);
 
   useEffect(() => {
     setFilter(data);
@@ -101,6 +103,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
         //   arrivalTime: segment.arriving_at,
         //   departureTime: segments[index + 1].departing_at
         // })
+        // const flightData = 
         return axios.post(
           `${import.meta.env.VITE_BASE_URL}transferRisk/calculate-risk`,
           {
@@ -323,34 +326,68 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
               <button className="mt-2 bg-yellow-500 text-white text-xs px-3 py-1 rounded hover:bg-yellow-600">
                 Book Now
               </button>
-              {
-                slices.map((slice, sliceIndex) => (
-                  <><div key={`${sliceIndex}-slices`} className="mt-6 ">
-                    {
-                      slice?.segments?.length > 1 && <button onClick={() => calculateRisk(slice)} className="mt-2 bg-red-400 text-white text-xs px-1 py-1  rounded hover:bg-red-600 flex items-center justify-center gap-1">
-                        <CiSquareInfo size={15} />
-                        <span className="text-[8px] text-gray-100 lg:block md:block sm:block hidden">Check Risk Integator</span>
-                      </button>
-                    }
-                  </div>
-                    <div key={sliceIndex} className="mt-6">
+              <div className="flex flex-col items-center gap-1">
+                {slices.map((slice, sliceIndex) => {
+                  const isSelected = sliceIndex === selectedSliceIndex;
+                  const baseBtn = "text-xs px-1 py-1 rounded flex items-center justify-center gap-1";
+                  const inactiveStyle = "opacity-50 hover:opacity-100";
 
-                      <button onClick={() => { setAdditionalDetails(false); setRiskDetails(false); setTerminalDetails(!termininalDetails) }} className="mt-2 bg-green-400 text-white text-xs px-1 py-1  rounded hover:bg-green-600 flex items-center justify-center gap-1">
-                        <TbListDetails size={15} />
-                        <span className="text-[8px] text-white lg:block md:block sm:block hidden">Terminals Distance</span>
-                      </button>
+                  return (
+                    <div key={sliceIndex} className="flex flex-row gap-2 items-end">
+                      <div className="mt-6">
+                        {slice?.segments?.length > 1 && (
+                          <button
+                            onClick={() => {
+                              calculateRisk(slice);
+                              setSelectedSliceIndex(sliceIndex);
+                            }}
+                            className={`mt-2 ${baseBtn} ${isSelected ? "bg-red-400 hover:bg-red-600 text-white" : "bg-red-200 hover:bg-red-400 text-white " + inactiveStyle
+                              }`}
+                          >
+                            <CiSquareInfo size={15} />
+                            <span className="text-[8px] text-gray-100 lg:block md:block sm:block hidden">
+                              Check Risk Integator
+                            </span>
+                          </button>
+                        )}
+                      </div>
 
+                      <div className="mt-6">
+                        <button
+                          onClick={() => {
+                            setAdditionalDetails(false);
+                            setRiskDetails(false);
+                            setTerminalDetails(true);
+                            setSelectedSlice(slice);
+                            setSelectedSliceIndex(sliceIndex);
+                          }}
+                          className={`mt-2 ${baseBtn} ${isSelected ? "bg-green-400 hover:bg-green-600 text-white" : "bg-green-200 text-white hover:bg-green-400 " + inactiveStyle
+                            }`}
+                        >
+                          <TbListDetails size={15} />
+                          <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                            Terminals Distance
+                          </span>
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setAdditionalDetails(true);
+                          setTerminalDetails(false);
+                          setSelectedSlice(slice);
+                          setRiskDetails(false);
+                          setSelectedSliceIndex(sliceIndex);
+                        }}
+                        className={`${baseBtn} mb-1 ${isSelected ? "bg-blue-400 hover:bg-blue-600 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                          }`}
+                      >
+                        <CiCircleInfo size={11} />
+                      </button>
                     </div>
-
-
-                    <button key={sliceIndex} onClick={() => { setAdditionalDetails(!additionalDetails); setTerminalDetails(false); setRiskDetails(false) }} className=" bg-blue-400 text-white text-xs px-1 py-1  rounded hover:bg-blue-600 flex items-center justify-center gap-1 mb-1">
-                      <CiCircleInfo size={11} />
-                    </button>
-
-                  </>
-
-                ))
-              }
+                  );
+                })}
+              </div>
 
             </div>
             <div className={` ${riskDetails ? 'flex w-full flex-col gap-5' : 'hidden'}  items-center justify-between text-gray-600 shadow-lg  rounded-lg p-2 mt-4`}>
@@ -374,16 +411,15 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                     <CiSquareInfo key={index} onClick={() => toggleRiskValueDetails(index)} size={25} className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} cursor-pointer`} />
                   </div>
                   <div key={index} className={`${riskValueDetails[index] ? "" : "hidden"} py-5 flex items-center justify-center flex-col gap-10`}>
-                    <SemiCircleChart value={risk?.data?.data?.riskValue == 'Extreme' ? 87 : risk?.data?.data?.riskValue == "High" ? 63 : risk?.data?.data?.riskValue == "Medium" ? 38 : 13} />
-                    <div className="flex lg:gap-3 sm:gap-3 md:gap-3 gap-1 flex-row justify-center items-center ">
-                      <div className="w-2 h-2 lg:w-5 lg:h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 flex items-center justify-center text-white font-bold bg-green-600 "></div>
-                      <p className="lg:text-xs sm:text-xs md:text-xs text-[8px]">Low</p>
-                      <div className="w-2 h-2 lg:w-5 lg:h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 flex items-center justify-center text-white font-bold bg-orange-500   "></div>
-                      <p className="lg:text-xs sm:text-xs md:text-xs text-[8px]">Medium</p>
-                      <div className="w-2 h-2 lg:w-5 lg:h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 flex items-center justify-center text-white font-bold bg-red-500    "></div>
-                      <p className="lg:text-xs sm:text-xs md:text-xs text-[8px]">High</p>
-                      <div className="w-2 h-2 lg:w-5 lg:h-5 sm:w-5 sm:h-5 md:w-5 md:h-5 flex items-center justify-center text-white font-bold bg-red-700    "></div>
-                      <p className="lg:text-xs sm:text-xs md:text-xs text-[8px]">Extreme</p>
+                    <SemiCircleChart value={risk?.data?.data?.riskValue == 'Extreme' ? 86 : risk?.data?.data?.riskValue == "High" ? 63 : risk?.data?.data?.riskValue == "Medium" ? 36 : 12}
+                      name={risk?.data?.data?.riskValue == 'Extreme' ? "Extreme" : risk?.data?.data?.riskValue == "High" ? "High" : risk?.data?.data?.riskValue == "Medium" ? "Medium" : "Low"} />
+                    <div className="flex lg:gap-3 sm:gap-3 md:gap-3 gap-1 flex-col justify-center items-center lg:text-xs sm:text-xs md:text-xs text-[8px] w-full">
+                      <div className="flex justify-around w-full lg:px-10  sm:px-10 md:px-36">
+                        <div className=" w-24 border-2 border-black flex items-center justify-center text-black font-bold bg-green-600 ">Low</div>
+                        <div className=" w-24 border-2 border-black flex items-center justify-center text-black font-bold bg-orange-500   ">Medium</div>
+                      </div>
+                      <div className="flex justify-around  w-full lg:px-10 sm:px-10 md:px-36"><div className=" w-24 border-2 border-black flex items-center justify-center text-black font-bold bg-red-500    ">High</div>
+                        <div className=" w-24 border-2 border-black flex items-center justify-center text-black font-bold bg-red-700    ">Extreme</div></div>
                     </div>
                   </div>
                   <ul key={index} className={`${riskValueDetails[index] ? "" : "hidden"} text-xs font-normal list-disc pl-5  `}>
@@ -410,111 +446,107 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
 
             </div>
             {
-              slices.map((slice, sliceIndex) => (
-                termininalDetails ? <div
-                  key={`terminal-${sliceIndex}`}
-                  className={`${termininalDetails ? 'flex w-full flex-col gap-3 p-3' : 'hidden'
-                    } text-gray-700 shadow-md rounded-lg mt-2`}
-                >
-                  {slice.segments.map((segment, index) => {
-                    const travel = segment?.inter_segment_terminal_travel;
-                    if (!travel) return null;
+              termininalDetails ? <div
+                className={`${termininalDetails ? 'flex w-full flex-col gap-3 p-3' : 'hidden'
+                  } text-gray-700 shadow-md rounded-lg mt-2`}
+              >
+                {selectedSlice?.segments?.map((segment, index) => {
+                  const travel = segment?.inter_segment_terminal_travel;
+                  if (!travel) return null;
 
-                    return (
-                      <div key={`${index}-segment`} className="w-full p-2 border-b last:border-none">
-                        {travel.airportName && (
-                          <p className="text-sm font-bold">Airport: <span className="font-normal">{travel.airportName}</span></p>
-                        )}
-                        {travel.from_terminal && travel.to_terminal && (
-                          <p className="text-sm font-bold">Terminal Transfer:</p>
-                        )}
-                        {travel.from_terminal && (
-                          <p className="text-sm">From: <span className="font-semibold">{travel.from_terminal}</span></p>
-                        )}
-                        {travel.to_terminal && (
-                          <p className="text-sm">To: <span className="font-semibold">{travel.to_terminal}</span></p>
-                        )}
-                        {travel.distance_meters && (
-                          <p className="text-sm">Distance: <span className="font-semibold">{travel.distance_meters} meters</span></p>
-                        )}
+                  return (
+                    <div key={`${index}-segment`} className="w-full p-2 border-b last:border-none">
+                      {travel.airportName && (
+                        <p className="text-sm font-bold">Airport: <span className="font-normal">{travel.airportName}</span></p>
+                      )}
+                      {travel.from_terminal && travel.to_terminal && (
+                        <p className="text-sm font-bold">Terminal Transfer:</p>
+                      )}
+                      {travel.from_terminal && (
+                        <p className="text-sm">From: <span className="font-semibold">{travel.from_terminal}</span></p>
+                      )}
+                      {travel.to_terminal && (
+                        <p className="text-sm">To: <span className="font-semibold">{travel.to_terminal}</span></p>
+                      )}
+                      {travel.distance_meters && (
+                        <p className="text-sm">Distance: <span className="font-semibold">{travel.distance_meters} meters</span></p>
+                      )}
 
-                        {travel.travel_modes?.length > 0 && (
-                          <p className="text-sm font-bold">Travel Modes:</p>
-                        )}
-                        {travel.travel_modes?.map((mode, index) => (
-                          <p key={index} className="ml-4 text-sm">- {mode}</p>
+                      {travel.travel_modes?.length > 0 && (
+                        <p className="text-sm font-bold">Travel Modes:</p>
+                      )}
+                      {travel.travel_modes?.map((mode, index) => (
+                        <p key={index} className="ml-4 text-sm">- {mode}</p>
+                      ))}
+
+                      {travel.travel_time_minutes && (
+                        <p className="text-sm font-bold">Estimated Travel Time:</p>
+                      )}
+                      {Object.entries(travel.travel_time_minutes)
+                        .filter(([_, time]) => time)
+                        .map(([mode, time], index) => (
+                          <p key={index} className="text-sm ml-4">
+                            {mode.charAt(0).toUpperCase() + mode.slice(1)}: <span className="font-semibold">{time} min</span>
+                          </p>
                         ))}
+                    </div>
+                  );
+                })}
+              </div> :
+                additionalDetails ? <div
+                  className={`${additionalDetails ? 'flex w-full flex-col gap-3 p-3' : 'hidden'
+                    } text-gray-700 shadow-md rounded-lg mt-2 `}
+                >
+                  {selectedSlice?.segments?.map((segment, index) => {
+                    const routine = selectedRoutine === "normal" ? segment?.additional_Inforamtion?.normal_routine : segment?.additional_Inforamtion?.busy_routine;
+                    if (!routine) return null;
+                    return (
+                      <div key={index + selectedRoutine} className="w-full p-2 border-b last:border-none">
+                        <div className="rounded-md p-3 bg-white text-gray-800 border">
+                          <div className="flex gap-2">
+                            {
+                              segment?.additional_Inforamtion?.normal_routine &&
+                              <button
+                                onClick={() => setSelectedRoutine("normal")}
+                                className={`px-3 py-1 text-xs rounded-md font-medium border ${selectedRoutine === "normal" ? "bg-gray-300" : "bg-gray-100"}`}
+                              >
+                                Normal
+                              </button>
+                            }
+                            {
+                              segment?.additional_Inforamtion?.busy_routine &&
+                              <button
+                                onClick={() => setSelectedRoutine("busy")}
+                                className={`px-3 py-1 text-xs rounded-md font-medium border ${selectedRoutine === "busy" ? "bg-gray-300" : "bg-gray-100"}`}
+                              >
+                                Busy
+                              </button>
+                            }
+                          </div>
 
-                        {travel.travel_time_minutes && (
-                          <p className="text-sm font-bold">Estimated Travel Time:</p>
-                        )}
-                        {Object.entries(travel.travel_time_minutes)
-                          .filter(([_, time]) => time)
-                          .map(([mode, time], index) => (
-                            <p key={index} className="text-sm ml-4">
-                              {mode.charAt(0).toUpperCase() + mode.slice(1)}: <span className="font-semibold">{time} min</span>
-                            </p>
-                          ))}
-                      </div>
-                    );
-                  })}
-                </div> :
-                  additionalDetails ? <div
-                    key={`additional-${sliceIndex}`}
-                    className={`${additionalDetails ? 'flex w-full flex-col gap-3 p-3' : 'hidden'
-                      } text-gray-700 shadow-md rounded-lg mt-2 `}
-                  >
-                    {slice.segments.map((segment, index) => {
-                      const routine = selectedRoutine === "normal" ? segment?.additional_Inforamtion?.normal_routine : segment?.additional_Inforamtion?.busy_routine;
-                      if (!routine) return null;
-                      return (
-                        <div key={index + selectedRoutine} className="w-full p-2 border-b last:border-none">
-                          <div className="rounded-md p-3 bg-white text-gray-800 border">
-                            <div className="flex gap-2">
-                              {
-                                segment?.additional_Inforamtion?.normal_routine &&
-                                <button
-                                  onClick={() => setSelectedRoutine("normal")}
-                                  className={`px-3 py-1 text-xs rounded-md font-medium border ${selectedRoutine === "normal" ? "bg-gray-300" : "bg-gray-100"}`}
-                                >
-                                  Normal
-                                </button>
-                              }
-                              {
-                                segment?.additional_Inforamtion?.busy_routine &&
-                                <button
-                                  onClick={() => setSelectedRoutine("busy")}
-                                  className={`px-3 py-1 text-xs rounded-md font-medium border ${selectedRoutine === "busy" ? "bg-gray-300" : "bg-gray-100"}`}
-                                >
-                                  Busy
-                                </button>
-                              }
-                            </div>
-
-                            <div className="mt-2 text-xs text-gray-700">
-                              {routine?.bus_cost_range_usd && (
-                                <p>🚌 <span className="font-semibold">Bus Cost:</span> {routine.bus_cost_range_usd}</p>
-                              )}
-                              {routine?.bus_waiting_time_minutes && (
-                                <p>⏳ <span className="font-semibold">Waiting Time:</span> {routine.bus_waiting_time_minutes} mins</p>
-                              )}
-                              {routine?.train_cost_range_usd && (
-                                <p>🚆 <span className="font-semibold">Train Cost:</span> {routine.train_cost_range_usd}</p>
-                              )}
-                              {routine?.walking_conditions && (
-                                <p>🚶 <span className="font-semibold">Walking:</span> {routine.walking_conditions}</p>
-                              )}
-                              {routine?.car_accessibility && (
-                                <p>🚗 <span className="font-semibold">Car Access:</span> {routine.car_accessibility}</p>
-                              )}
-                            </div>
+                          <div className="mt-2 text-xs text-gray-700">
+                            {routine?.bus_cost_range_usd && (
+                              <p>🚌 <span className="font-semibold">Bus Cost:</span> {routine.bus_cost_range_usd}</p>
+                            )}
+                            {routine?.bus_waiting_time_minutes && (
+                              <p>⏳ <span className="font-semibold">Waiting Time:</span> {routine.bus_waiting_time_minutes} mins</p>
+                            )}
+                            {routine?.train_cost_range_usd && (
+                              <p>🚆 <span className="font-semibold">Train Cost:</span> {routine.train_cost_range_usd}</p>
+                            )}
+                            {routine?.walking_conditions && (
+                              <p>🚶 <span className="font-semibold">Walking:</span> {routine.walking_conditions}</p>
+                            )}
+                            {routine?.car_accessibility && (
+                              <p>🚗 <span className="font-semibold">Car Access:</span> {routine.car_accessibility}</p>
+                            )}
                           </div>
                         </div>
+                      </div>
 
-                      );
-                    })}
-                  </div> : null
-              ))
+                    );
+                  })}
+                </div> : null
             }
           </div>
 

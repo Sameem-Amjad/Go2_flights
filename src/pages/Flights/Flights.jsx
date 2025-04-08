@@ -329,6 +329,7 @@ const FlightOffersList = () => {
             };
 
         if (selectedDates.length > 1 && tripType === "roundTrip") {
+          console.log("roundtrip", requestData)
           const res = await axios.post(
             `${import.meta.env.VITE_BASE_URL}flights/createOfferRequest`,
             requestData
@@ -360,7 +361,7 @@ const FlightOffersList = () => {
           selectedDates.length !== 0 &&
           tripType === "oneWay"
         ) {
-          console.log("Request Payload:", requestData); // Log the payload
+          console.log("Request Payload one way: ", requestData); // Log the payload
           const res = await axios.post(
             `${import.meta.env.VITE_BASE_URL}flights/createOfferRequest`,
             requestData

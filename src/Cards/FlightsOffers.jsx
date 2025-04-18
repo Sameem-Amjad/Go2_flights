@@ -89,6 +89,9 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
   const calculateRisk = async (slice) => {
     const { segments } = slice;
     const riskPromises = segments.map((segment, index) => {
+      let sameOperator = false;
+
+
       if (index < segments.length - 1) {
         const type = segment.isGCC
           ? segment.codeShare
@@ -102,6 +105,23 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
         //   arrivalTime: segment.arriving_at,
         //   departureTime: segments[index + 1].departing_at
         // })
+        // console.log(`${index}segment`, segment?.operating_carrier?.name, 'marketing :', segment?.marketing_carrier?.name)
+        // console.log(segment?.operating_carrier?.name === segment?.marketing_carrier?.name)
+        // console.log(`${index + 1}segment`, segments[index + 1]?.operating_carrier?.name, 'marketing :', segments[index + 1]?.marketing_carrier?.name)
+        // console.log(segment[index + 1]?.operating_carrier?.name === segment[index + 1]?.marketing_carrier?.name)
+        // console.log(segment?.operating_carrier?.name === segment?.marketing_carrier?.name &&
+        //   segments[index + 1]?.operating_carrier?.name === segments[index + 1]?.marketing_carrier?.name)
+
+        if (
+          segment?.operating_carrier?.name === segment?.marketing_carrier?.name &&
+          segments[index + 1]?.operating_carrier?.name === segments[index + 1]?.marketing_carrier?.name &&
+          segment?.operating_carrier?.name === segments[index + 1]?.operating_carrier?.name &&
+          segment?.marketing_carrier?.name === segments[index + 1]?.marketing_carrier?.name
+        ) {
+          sameOperator = true;
+        }
+
+        // console.log("sameOperator", sameOperator)
         const flightData = [{}]
         const flightsDetails = segments[index + 1];
         if (flightsDetails) {
@@ -121,6 +141,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
             type: type,
             arrivalTime: segment.arriving_at,
             departureTime: segments[index + 1].departing_at
+            , sameOperator
           }
         ).then(response => ({
 
@@ -426,7 +447,14 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                     Available Layover Time: {`${Math.floor(risk?.data?.data?.totalAvailableTime / 60)} hr ${risk?.data?.data?.totalAvailableTime % 60} min`}
                   </p>
                   <p className="text-sm font-medium">
-                    Transfer Time: {`${Math.floor(risk?.data?.data?.transferTime / 60)} hr ${risk?.data?.data?.transferTime % 60} min`}
+                    Transfer Time: {
+                      risk?.data?.data?.sameOperator && risk?.data?.data?.availableTime > risk?.data?.data?.transferTime
+                        ? `${Math.floor(risk?.data?.data?.transferTime / 60)} hr ${risk?.data?.data?.transferTime % 60} min`
+                        : risk?.data?.data?.sameOperator
+                          ? `less than ${Math.floor(risk?.data?.data?.totalAvailableTime / 60)} hr ${risk?.data?.data?.totalAvailableTime % 60} min`
+                          : `${Math.floor(risk?.data?.data?.transferTime / 60)} hr ${risk?.data?.data?.transferTime % 60} min`
+                    }
+
                   </p>
                   <p className="text-sm font-semibold">
                     Available Layover Time before Boarding: {`${Math.floor(risk?.data?.data?.availableTime / 60)} hr ${risk?.data?.data?.availableTime % 60} min`}

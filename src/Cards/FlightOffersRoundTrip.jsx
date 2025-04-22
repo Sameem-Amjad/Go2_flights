@@ -518,10 +518,12 @@ const FlightOfferCard = ({ offer, data }) => {
                   <li>Reason: <span className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} font-thin text-xs `}> {risk?.data?.data?.riskReason}</span></li>
 
                   <li>Flight is <span className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} font-bold`}> {risk?.data?.data?.type}</span></li>
+                  {risk?.data?.data?.type ? <></> : <>
+                    <li>Buggage Pickup Time is between <span className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} font-bold`}> {risk?.data?.data?.estimate?.baggagePickup?.min + ' - ' + risk?.data?.data?.estimate?.baggagePickup?.max} minutes</span></li>
 
-                  <li>Buggage Pickup Time is between <span className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} font-bold`}> {risk?.data?.data?.estimate?.baggagePickup?.min + ' - ' + risk?.data?.data?.estimate?.baggagePickup?.max} minutes</span></li>
+                    <li>Customs Clearance Time is between <span className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} font-bold`}> {risk?.data?.data?.estimate?.customsClearance?.min + ' - ' + risk?.data?.data?.estimate?.customsClearance?.max} minutes</span></li>
+                  </>}
 
-                  <li>Customs Clearance Time is between <span className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} font-bold`}> {risk?.data?.data?.estimate?.customsClearance?.min + ' - ' + risk?.data?.data?.estimate?.customsClearance?.max} minutes</span></li>
 
                   <li>Aircraft Exit Time is between <span className={`${risk?.data?.data?.riskValue == 'Extreme' ? "text-red-700" : risk?.data?.data?.riskValue == "High" ? "text-red-500" : risk?.data?.data?.riskValue == "Medium" ? "text-orange-500" : "text-green-600"} font-bold`}> {risk?.data?.data?.estimate?.exitAircraft?.min + ' - ' + risk?.data?.data?.estimate?.exitAircraft?.max} minutes</span></li>
 

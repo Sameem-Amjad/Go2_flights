@@ -2,12 +2,18 @@ import React, { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import { CiSquareInfo } from "react-icons/ci";
 import { TbListDetails } from "react-icons/tb";
+import { FcGlobe } from "react-icons/fc";
 import { CiCircleInfo } from "react-icons/ci";
 import axios from "axios";
+import map_img from '../assets/png/map_img.jpg'
 import SemiCircleChart from "../charts/semiCircleCharts.jsx";
+import MapModal from "../components/Modal/MapModal.jsx";
 
 const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showMapModal,setShowMapModal] = useState(false);
+
+
   const {
     total_amount,
     total_currency,
@@ -229,6 +235,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                 {segment.marketing_carrier_flight_number}
               </p>
             </div>
+            
           </div>
 
           <div className="flex items-center justify-between text-gray-600 shadow-lg  rounded-lg px-2 mt-2">
@@ -419,6 +426,22 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                       >
                         <CiCircleInfo size={11} />
                       </button>
+                       <div className="mt-6">
+                        <button
+                          onClick={()=>{setShowMapModal(!showModal)
+                            setSelectedSlice(slice);
+                            setSelectedSliceIndex(sliceIndex);
+                          }}
+                          className={`mt-2 ${baseBtn} ${isSelected ? "bg-blue-400 hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                            }`}
+                        >
+                          <FcGlobe size={15} />
+
+                          <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                            map
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -756,6 +779,11 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
             </div>
           </div>
         )}
+        {
+          showMapModal && (
+            <MapModal slices={slices} setShowMapModal={setShowMapModal}/>
+          )
+        }
       </div>
       {
         showDeals && offer.moreClasses && offer.moreClasses.length > 0 && (

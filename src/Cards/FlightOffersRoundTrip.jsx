@@ -4,6 +4,8 @@ import { CiCircleInfo, CiSquareInfo } from "react-icons/ci";
 import { TbListDetails } from "react-icons/tb";
 import axios from "axios";
 import SemiCircleChart from "../charts/semiCircleCharts";
+import MapModal from "../components/Modal/MapModal";
+import { FcGlobe } from "react-icons/fc";
 
 const calculateLayoverTime = (segment1, segment2) => {
   const arrival = DateTime.fromISO(segment1.arriving_at);
@@ -13,6 +15,7 @@ const calculateLayoverTime = (segment1, segment2) => {
 
 const FlightOfferCard = ({ offer, data }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
   const {
     total_amount,
     total_currency,
@@ -306,7 +309,22 @@ const FlightOfferCard = ({ offer, data }) => {
 
             </div>
 
+            <div className="mt-6">
+              <button
+                onClick={() => {
+                  setShowMapModal(!showModal)
+                  setIsFirstSlice(true)
+                }}
+                className={`mt-2  ${isFirstSlice ? "bg-blue-400 hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                  }`}
+              >
+                <FcGlobe size={15} />
 
+                <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                  map
+                </span>
+              </button>
+            </div>
             <button onClick={() => { setAdditionalDetails(true); setTerminalDetails(false); setRiskDetails(false); setIsFirstSlice(true); setSelectedSlice(firstSlice) }} className=" bg-blue-400 text-white text-xs px-1 py-1  rounded hover:bg-blue-600 flex items-center justify-center gap-1">
               <CiCircleInfo size={11} />
             </button>
@@ -417,7 +435,22 @@ const FlightOfferCard = ({ offer, data }) => {
 
             </div>
 
+            <div className="mt-6">
+              <button
+                onClick={() => {
+                  setShowMapModal(!showModal)
+                  setIsFirstSlice(false)
+                }}
+                className={`mt-2 ${baseBtn} ${isSelected ? "bg-blue-400 hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                  }`}
+              >
+                <FcGlobe size={15} />
 
+                <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                  map
+                </span>
+              </button>
+            </div>
             <button onClick={() => { setAdditionalDetails(true); setTerminalDetails(false); setRiskDetails(false); setSelectedSlice(secondSlice) }} className=" bg-blue-400 text-white text-xs px-1 py-1  rounded hover:bg-blue-600 flex items-center justify-center gap-1">
               <CiCircleInfo size={11} />
             </button>
@@ -906,6 +939,13 @@ const FlightOfferCard = ({ offer, data }) => {
           </div>
         </div>
       )}
+      {
+        showMapModal && (
+          <MapModal slices={isFirstSlice ? [firstSlice] : [secondSlice]} setShowMapModal={setShowMapModal} />
+        )
+      }
+
+
       {showDeals && offer.moreClasses && offer.moreClasses.length > 0 && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-2xl border p-6 max-w-lg w-full">

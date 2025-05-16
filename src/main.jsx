@@ -6,10 +6,8 @@ import { LoadScript } from '@react-google-maps/api'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
 
-      <App />
-    </LoadScript>
+    <App />
 
   </StrictMode >,
 )

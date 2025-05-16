@@ -315,7 +315,7 @@ const FlightOfferCard = ({ offer, data }) => {
                   setShowMapModal(!showModal)
                   setIsFirstSlice(true)
                 }}
-                className={`mt-2  ${isFirstSlice ? "bg-blue-400 hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                className={`mt-2 mt-2 text-xs px-1 py-1 rounded flex items-center justify-center gap-1 ${isFirstSlice ? "bg-blue-400 flex hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 opacity-50 hover:opacity-100"
                   }`}
               >
                 <FcGlobe size={15} />
@@ -441,7 +441,7 @@ const FlightOfferCard = ({ offer, data }) => {
                   setShowMapModal(!showModal)
                   setIsFirstSlice(false)
                 }}
-                className={`mt-2 ${baseBtn} ${isSelected ? "bg-blue-400 hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                className={`mt-2 text-xs px-1 py-1 rounded flex items-center justify-center gap-1 ${isFirstSlice ? "bg-blue-400 hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 opacity-50 hover:opacity-100"
                   }`}
               >
                 <FcGlobe size={15} />

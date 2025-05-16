@@ -11,7 +11,7 @@ import MapModal from "../components/Modal/MapModal.jsx";
 
 const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [showModal, setShowModal] = useState(false);
-  const [showMapModal,setShowMapModal] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
 
 
   const {
@@ -235,7 +235,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                 {segment.marketing_carrier_flight_number}
               </p>
             </div>
-            
+
           </div>
 
           <div className="flex items-center justify-between text-gray-600 shadow-lg  rounded-lg px-2 mt-2">
@@ -412,23 +412,10 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                           </span>
                         </button>
                       </div>
-
-                      <button
-                        onClick={() => {
-                          setAdditionalDetails(true);
-                          setTerminalDetails(false);
-                          setSelectedSlice(slice);
-                          setRiskDetails(false);
-                          setSelectedSliceIndex(sliceIndex);
-                        }}
-                        className={`${baseBtn} mb-1 ${isSelected ? "bg-blue-400 hover:bg-blue-600 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
-                          }`}
-                      >
-                        <CiCircleInfo size={11} />
-                      </button>
-                       <div className="mt-6">
+                      <div className="mt-6">
                         <button
-                          onClick={()=>{setShowMapModal(!showModal)
+                          onClick={() => {
+                            setShowMapModal(!showModal)
                             setSelectedSlice(slice);
                             setSelectedSliceIndex(sliceIndex);
                           }}
@@ -442,6 +429,20 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                           </span>
                         </button>
                       </div>
+                      <button
+                        onClick={() => {
+                          setAdditionalDetails(true);
+                          setTerminalDetails(false);
+                          setSelectedSlice(slice);
+                          setRiskDetails(false);
+                          setSelectedSliceIndex(sliceIndex);
+                        }}
+                        className={`${baseBtn} mb-1 ${isSelected ? "bg-blue-400 hover:bg-blue-600 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                          }`}
+                      >
+                        <CiCircleInfo size={11} />
+                      </button>
+
                     </div>
                   );
                 })}
@@ -781,7 +782,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
         )}
         {
           showMapModal && (
-            <MapModal slices={slices} setShowMapModal={setShowMapModal}/>
+            <MapModal slices={slices} setShowMapModal={setShowMapModal} />
           )
         }
       </div>

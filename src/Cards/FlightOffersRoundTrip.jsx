@@ -315,14 +315,14 @@ const FlightOfferCard = ({ offer, data }) => {
                   setShowMapModal(!showModal)
                   setIsFirstSlice(true)
                 }}
-                className={`mt-2 mt-2 text-xs px-1 py-1 rounded flex items-center justify-center gap-1 ${isFirstSlice ? "bg-blue-400 flex hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 opacity-50 hover:opacity-100"
+                className={`mt-2  text-xs px-1 py-1 rounded flex items-center justify-center gap-1 ${isFirstSlice ? "bg-blue-400 flex hover:bg-blue-800 text-white" : "bg-blue-200 text-white hover:bg-blue-400 opacity-50 hover:opacity-100"
                   }`}
               >
                 <FcGlobe size={15} />
 
-                <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                {/* <span className="text-[8px] text-white lg:block md:block sm:block hidden">
                   map
-                </span>
+                </span> */}
               </button>
             </div>
             <button onClick={() => { setAdditionalDetails(true); setTerminalDetails(false); setRiskDetails(false); setIsFirstSlice(true); setSelectedSlice(firstSlice) }} className=" bg-blue-400 text-white text-xs px-1 py-1  rounded hover:bg-blue-600 flex items-center justify-center gap-1">
@@ -446,9 +446,9 @@ const FlightOfferCard = ({ offer, data }) => {
               >
                 <FcGlobe size={15} />
 
-                <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                {/* <span className="text-[8px] text-white lg:block md:block sm:block hidden">
                   map
-                </span>
+                </span> */}
               </button>
             </div>
             <button onClick={() => { setAdditionalDetails(true); setTerminalDetails(false); setRiskDetails(false); setSelectedSlice(secondSlice) }} className=" bg-blue-400 text-white text-xs px-1 py-1  rounded hover:bg-blue-600 flex items-center justify-center gap-1">

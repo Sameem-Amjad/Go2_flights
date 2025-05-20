@@ -92,9 +92,17 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
     const departure = DateTime.fromISO(segment2.departing_at);
     return departure.diff(arrival, ["hours", "minutes"]).toObject();
   };
+
+  function getNumericTime(dateString) {
+    const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return Number(`${hours}.${minutes.toString().padStart(2, '0')}`);
+  }
+
   const calculateRisk = async (slice) => {
     const { segments } = slice;
-    const riskPromises = segments.map((segment, index) => {
+    const riskPromises = segments.map(async (segment, index) => {
       let sameOperator = false;
 
 
@@ -126,7 +134,49 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
         ) {
           sameOperator = true;
         }
-
+        // console.log("airline_code", segment?.operating_carrier?.iata_code)
+        // console.log("origin", segment.origin.iata_code)
+        // console.log("dest", segment.destination.iata_code)
+        // console.log("dep_hour", getNumericTime(segment.departing_at))
+        // console.log("arr_hour", getNumericTime(segment.arriving_at))
+        // console.log("air_time",
+        //   Math.round(Math.abs(
+        //     (new Date(segment.departing_at).getTime()) -
+        //     (new Date(segment.arriving_at).getTime())
+        //   ) / (1000 * 60))
+        // );
+        let responseData;
+        try {
+          let payload = {
+            airline_code: segment?.operating_carrier?.iata_code,
+            origin: segment?.origin?.iata_code,
+            dest: segment?.destination?.iata_code,
+            dep_hour: getNumericTime(segment?.departing_at),
+            arr_hour: getNumericTime(segment?.arriving_at),
+            air_time: Math.round(Math.abs(
+              new Date(segment?.departing_at).getTime() -
+              new Date(segment?.arriving_at).getTime()
+            ) / (1000 * 60))
+          };
+          responseData = await axios.post(`${import.meta.env.VITE_FLASK_DELAY_API_BACKEND}predict`, payload);
+          const arrivalDelay = Math.round(responseData.data.predicted_arrival_delay);
+          payload = {
+            airline_code: segments[index + 1]?.operating_carrier?.iata_code,
+            origin: segments[index + 1]?.origin?.iata_code,
+            dest: segments[index + 1]?.destination?.iata_code,
+            dep_hour: getNumericTime(segments[index + 1]?.departing_at),
+            arr_hour: getNumericTime(segments[index + 1]?.arriving_at),
+            air_time: Math.round(Math.abs(
+              new Date(segments[index + 1]?.departing_at).getTime() -
+              new Date(segments[index + 1]?.arriving_at).getTime()
+            ) / (1000 * 60))
+          };
+          responseData = await axios.post(`${import.meta.env.VITE_FLASK_DELAY_API_BACKEND}predict`, payload);
+          const departureDelay = Math.round(responseData.data.predicted_departure_delay)
+        } catch (error) {
+          console.error("Error in /predict API:", error.message);
+          console.log("Error in /predict API:", error);
+        }
         // console.log("sameOperator", sameOperator)
         const flightData = [{}]
         const flightsDetails = segments[index + 1];
@@ -424,9 +474,9 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                         >
                           <FcGlobe size={15} />
 
-                          <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                          {/* <span className="text-[8px] text-white lg:block md:block sm:block hidden">
                             map
-                          </span>
+                          </span> */}
                         </button>
                       </div>
                       <button

@@ -81,11 +81,18 @@ const FlightOfferCard = ({ offer, data }) => {
     return DateTime.fromISO(date).toFormat("EEE, dd MMM HH:mm");
   };
 
+  function getNumericTime(dateString) {
+    const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return Number(`${hours}.${minutes.toString().padStart(2, '0')}`);
+  }
+
   const calculateRisk = async (slice, value) => {
     setIsFirstSlice(value)
     const { segments } = slice;
 
-    const riskPromises = segments.map((segment, index) => {
+    const riskPromises = segments.map(async (segment, index) => {
       let sameOperator = false;
       if (index < segments.length - 1) {
         const type = segment.isGCC
@@ -108,6 +115,43 @@ const FlightOfferCard = ({ offer, data }) => {
         ) {
           sameOperator = true;
         }
+        let responseData;
+        let arrivalDelay = 0;
+        let departureDelay = 0;
+        try {
+          let payload = {
+            airline_code: segment?.operating_carrier?.iata_code,
+            origin: segment?.origin?.iata_code,
+            dest: segment?.destination?.iata_code,
+            dep_hour: getNumericTime(segment?.departing_at),
+            arr_hour: getNumericTime(segment?.arriving_at),
+            air_time: Math.round(Math.abs(
+              new Date(segment?.departing_at).getTime() -
+              new Date(segment?.arriving_at).getTime()
+            ) / (1000 * 60))
+          };
+          responseData = await axios.post(`${import.meta.env.VITE_FLASK_DELAY_API_BACKEND}predict`, payload);
+          console.log(responseData.data.predicted_arrival_delay)
+          arrivalDelay = Math.round(responseData.data.predicted_arrival_delay);
+          payload = {
+            airline_code: segments[index + 1]?.operating_carrier?.iata_code,
+            origin: segments[index + 1]?.origin?.iata_code,
+            dest: segments[index + 1]?.destination?.iata_code,
+            dep_hour: getNumericTime(segments[index + 1]?.departing_at),
+            arr_hour: getNumericTime(segments[index + 1]?.arriving_at),
+            air_time: Math.round(Math.abs(
+              new Date(segments[index + 1]?.departing_at).getTime() -
+              new Date(segments[index + 1]?.arriving_at).getTime()
+            ) / (1000 * 60))
+          };
+          responseData = await axios.post(`${import.meta.env.VITE_FLASK_DELAY_API_BACKEND}predict`, payload);
+          console.log(responseData.data.predicted_departure_delay)
+          departureDelay = Math.round(responseData.data.predicted_departure_delay)
+        } catch (error) {
+          console.error("Error in /predict API:", error.message);
+          console.log("Error in /predict API:", error);
+        }
+
 
         return axios.post(
           `${import.meta.env.VITE_BASE_URL}transferRisk/calculate-risk`,
@@ -115,7 +159,9 @@ const FlightOfferCard = ({ offer, data }) => {
             type: type,
             arrivalTime: segment.arriving_at,
             departureTime: segments[index + 1].departing_at,
-            sameOperator
+            sameOperator,
+            arrivalDelay,
+            departureDelay
           }
         ).then(response => ({
           index,
@@ -129,7 +175,8 @@ const FlightOfferCard = ({ offer, data }) => {
       }
       return null;
     }).filter(Boolean);
-    const riskResults = await Promise.all(riskPromises);
+    let riskResults = await Promise.all(riskPromises);
+    riskResults = riskResults.filter((result) => result !== null);
     if (riskResults.error) {
       setRiskDetails(false)
       setTerminalDetails(false)

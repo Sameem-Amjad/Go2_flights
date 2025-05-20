@@ -26,6 +26,7 @@
     "dayjs": "^1.11.13",
     "iata": "^0.0.0",
     "install": "^0.13.0",
+    "lucide-react": "^0.511.0",
     "luxon": "^3.5.0",
     "mapbox-gl": "^2.15.0",
     "moment-timezone": "^0.5.46",

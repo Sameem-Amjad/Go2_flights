@@ -146,6 +146,8 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
         //   ) / (1000 * 60))
         // );
         let responseData;
+        let arrivalDelay = 0;
+        let departureDelay = 0;
         try {
           let payload = {
             airline_code: segment?.operating_carrier?.iata_code,
@@ -159,7 +161,8 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
             ) / (1000 * 60))
           };
           responseData = await axios.post(`${import.meta.env.VITE_FLASK_DELAY_API_BACKEND}predict`, payload);
-          const arrivalDelay = Math.round(responseData.data.predicted_arrival_delay);
+          console.log(responseData.data.predicted_arrival_delay)
+          arrivalDelay = Math.round(responseData.data.predicted_arrival_delay);
           payload = {
             airline_code: segments[index + 1]?.operating_carrier?.iata_code,
             origin: segments[index + 1]?.origin?.iata_code,
@@ -172,11 +175,15 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
             ) / (1000 * 60))
           };
           responseData = await axios.post(`${import.meta.env.VITE_FLASK_DELAY_API_BACKEND}predict`, payload);
-          const departureDelay = Math.round(responseData.data.predicted_departure_delay)
+          console.log(responseData.data.predicted_departure_delay)
+          departureDelay = Math.round(responseData.data.predicted_departure_delay)
         } catch (error) {
           console.error("Error in /predict API:", error.message);
           console.log("Error in /predict API:", error);
         }
+
+
+
         // console.log("sameOperator", sameOperator)
         const flightData = [{}]
         const flightsDetails = segments[index + 1];
@@ -197,7 +204,9 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
             type: type,
             arrivalTime: segment.arriving_at,
             departureTime: segments[index + 1].departing_at
-            , sameOperator
+            , sameOperator,
+            arrivalDelay,
+            departureDelay
           }
         ).then(response => ({
 
@@ -214,7 +223,8 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
       }
       return null;
     }).filter(Boolean);
-    const riskResults = await Promise.all(riskPromises);
+    let riskResults = await Promise.all(riskPromises);
+    riskResults = riskResults.filter((result) => result !== null);
     if (riskResults.error) {
       setRiskDetails(false)
       setTerminalDetails(false)

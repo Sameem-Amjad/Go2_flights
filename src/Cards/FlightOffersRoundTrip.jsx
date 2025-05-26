@@ -254,7 +254,7 @@ const FlightOfferCard = ({ offer, data }) => {
 
         {/* Outbound Flight */}
         <div className="flex flex-col items-center justify-between text-gray-600 shadow-lg  rounded-lg px-2 mt-2">
-          <div className="flex flex-row w-full">
+          <div className="flex flex-row w-full ">
             <div className="text-center">
               <p className="text-sm font-semibold">
                 {formatCustomDate(firstSlice?.segments[0]?.departing_at)}
@@ -338,12 +338,12 @@ const FlightOfferCard = ({ offer, data }) => {
               </p>
             </div>
           </div>
-          <div className="flex items-baseline gap-1 justify-end w-full mb-1">
+          <div className="flex items-baseline gap-1 justify-start sm:justify-end lg:justify-end md:justify-end w-full mb-1 flex-row">
             <div className="mt-2">
               {
                 firstSlice?.segments?.length > 1 && <button onClick={() => calculateRisk(firstSlice, true)} className="mt-2 bg-red-400 text-white text-xs px-1 py-1  rounded hover:bg-red-600 flex items-center justify-center gap-1">
                   <CiSquareInfo size={15} />
-                  <span className="text-[8px] text-gray-100 lg:block md:block sm:block hidden">Check Risk Integator</span>
+                  <span className="text-[8px] text-gray-100 lg:block md:block sm:block block">Check Risk Integator</span>
                 </button>
               }
             </div>
@@ -351,7 +351,7 @@ const FlightOfferCard = ({ offer, data }) => {
 
               <button onClick={() => { setAdditionalDetails(false); setRiskDetails(false); setTerminalDetails(true); setIsFirstSlice(true); setSelectedSlice(firstSlice) }} className="mt-2 bg-green-400 text-white text-xs px-1 py-1  rounded hover:bg-green-600 flex items-center justify-center gap-1">
                 <TbListDetails size={15} />
-                <span className="text-[8px] text-white lg:block md:block sm:block hidden">Terminals Distance</span>
+                <span className="text-[8px] text-white lg:block md:block sm:block block">Terminals Distance</span>
               </button>
 
             </div>
@@ -367,13 +367,13 @@ const FlightOfferCard = ({ offer, data }) => {
               >
                 <FcGlobe size={15} />
 
-                {/* <span className="text-[8px] text-white lg:block md:block sm:block hidden">
-                  map
-                </span> */}
+                <span className="text-[8px] text-white lg:block md:block sm:block block">
+                  Flight Path
+                </span>
               </button>
             </div>
             <button onClick={() => { setAdditionalDetails(true); setTerminalDetails(false); setRiskDetails(false); setIsFirstSlice(true); setSelectedSlice(firstSlice) }} className=" bg-blue-400 text-white text-xs px-1 py-1  rounded hover:bg-blue-600 flex items-center justify-center gap-1">
-              <CiCircleInfo size={11} />
+              <CiCircleInfo size={15} />
             </button>
           </div>
         </div>
@@ -464,12 +464,12 @@ const FlightOfferCard = ({ offer, data }) => {
               </p>
             </div>
           </div>
-          <div className="flex items-baseline gap-1 justify-end w-full  mb-1">
+          <div className="flex items-baseline gap-1 justify-start sm:justify-end md:justify-end lg:justify-end w-full  mb-1 flex-row">
             <div className="mt-2">
               {
                 secondSlice?.segments?.length > 1 && <button onClick={() => calculateRisk(secondSlice, false)} className="mt-2 bg-red-400 text-white text-xs px-1 py-1  rounded hover:bg-red-600 flex items-center justify-center gap-1">
                   <CiSquareInfo size={15} />
-                  <span className="text-[8px] text-gray-100 lg:block md:block sm:block hidden">Check Risk Integator</span>
+                  <span className="text-[8px] text-gray-100 lg:block md:block sm:block block">Check Risk Integator</span>
                 </button>
               }
             </div>
@@ -477,7 +477,7 @@ const FlightOfferCard = ({ offer, data }) => {
 
               <button onClick={() => { setAdditionalDetails(false); setRiskDetails(false); setTerminalDetails(true); setSelectedSlice(secondSlice); }} className="mt-2 bg-green-400 text-white text-xs px-1 py-1  rounded hover:bg-green-600 flex items-center justify-center gap-1">
                 <TbListDetails size={15} />
-                <span className="text-[8px] text-white lg:block md:block sm:block hidden">Terminals Distance</span>
+                <span className="text-[8px] text-white lg:block md:block sm:block block">Terminals Distance</span>
               </button>
 
             </div>
@@ -493,13 +493,13 @@ const FlightOfferCard = ({ offer, data }) => {
               >
                 <FcGlobe size={15} />
 
-                {/* <span className="text-[8px] text-white lg:block md:block sm:block hidden">
-                  map
-                </span> */}
+                <span className="text-[8px] text-white lg:block md:block sm:block block">
+                  Flight Map
+                </span>
               </button>
             </div>
             <button onClick={() => { setAdditionalDetails(true); setTerminalDetails(false); setRiskDetails(false); setSelectedSlice(secondSlice) }} className=" bg-blue-400 text-white text-xs px-1 py-1  rounded hover:bg-blue-600 flex items-center justify-center gap-1">
-              <CiCircleInfo size={11} />
+              <CiCircleInfo size={15} />
             </button>
           </div>
 
@@ -545,7 +545,7 @@ const FlightOfferCard = ({ offer, data }) => {
           <p className="text-gray-500 text-sm">
             {base_amount} {total_currency} (Tax: {tax_amount} {total_currency})
           </p>
-          <div className="flex items-end gap-1 ">
+          <div className="flex items-end gap-1 w-full lg:justify-end md:justify-end sm:justify-end justify-between">
             <button className="mt-2 bg-yellow-500 text-white text-xs px-3 py-1 rounded hover:bg-yellow-600">
               Book Now
             </button>
@@ -780,7 +780,7 @@ const FlightOfferCard = ({ offer, data }) => {
                         </p>
                       </div>
 
-                      <div className="flex flex-col items-center px-4">
+                      <div className="flex flex-col items-center px-0 sm:px-4 md:px-4 lg:px-4">
                         <span className="text-custom-gold text-sm">
                           {formatDuration(segment?.duration)}
                         </span>
@@ -897,7 +897,7 @@ const FlightOfferCard = ({ offer, data }) => {
                           </p>
                         </div>
 
-                        <div className="flex flex-col items-center px-4">
+                        <div className="flex flex-col items-center px-0 sm:px-4 md:px-4 lg:px-4  ">
                           <span className="text-custom-gold text-sm">
                             {formatDuration(segment.duration)}
                           </span>
@@ -1035,7 +1035,7 @@ const FlightOfferCard = ({ offer, data }) => {
                           <strong className="text-custom-green">Price:</strong>{" "}
                           {deal.total_amount} {offer.currency}
                         </p>
-                        <div className="flex items-end gap-1 ">
+                        <div className="flex items-end gap-1 w-full lg:justify-end md:justify-end sm:justify-end justify-between">
                           <a
                             href={`booking-link/${deal.booking_link}`}
                             className="mt-2 bg-yellow-500 text-white text-xs px-3 py-1 rounded hover:bg-yellow-600"

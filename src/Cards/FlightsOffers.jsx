@@ -424,7 +424,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
               {base_amount} {total_currency} (Tax: {tax_amount} {total_currency}
               )
             </p>
-            <div className="flex items-end gap-1 ">
+            <div className="flex sm:items-end md:items-end lg:items-end items-start gap-1 w-full lg:justify-end md:justify-end sm:justify-end justify-between flex-col-reverse sm:flex-row lg:flex-row md:flex-row">
               <button className="mt-2 bg-yellow-500 text-white text-xs px-3 py-1 rounded hover:bg-yellow-600">
                 Book Now
               </button>
@@ -447,7 +447,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                               }`}
                           >
                             <CiSquareInfo size={15} />
-                            <span className="text-[8px] text-gray-100 lg:block md:block sm:block hidden">
+                            <span className="text-[8px] text-gray-100 lg:block md:block sm:block block">
                               Check Risk Integator
                             </span>
                           </button>
@@ -467,7 +467,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                             }`}
                         >
                           <TbListDetails size={15} />
-                          <span className="text-[8px] text-white lg:block md:block sm:block hidden">
+                          <span className="text-[8px] text-white lg:block md:block sm:block block">
                             Terminals Distance
                           </span>
                         </button>
@@ -484,9 +484,9 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                         >
                           <FcGlobe size={15} />
 
-                          {/* <span className="text-[8px] text-white lg:block md:block sm:block hidden">
-                            map
-                          </span> */}
+                          <span className="text-[8px] text-white lg:block md:block sm:block block ">
+                            Flight Path
+                          </span>
                         </button>
                       </div>
                       <button
@@ -497,10 +497,10 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                           setRiskDetails(false);
                           setSelectedSliceIndex(sliceIndex);
                         }}
-                        className={`${baseBtn} mb-1 ${isSelected ? "bg-blue-400 hover:bg-blue-600 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
+                        className={`${baseBtn}  ${isSelected ? "bg-blue-400 hover:bg-blue-600 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
                           }`}
                       >
-                        <CiCircleInfo size={11} />
+                        <CiCircleInfo size={15} />
                       </button>
 
                     </div>
@@ -752,7 +752,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                             </p>
                           </div>
 
-                          <div className="flex flex-col items-center px-4">
+                          <div className="flex flex-col items-center px-0 sm:px-4 md:px-4 lg:px-4">
                             <span className="text-custom-gold text-sm">
                               {formatDuration(segment.duration)}
                             </span>

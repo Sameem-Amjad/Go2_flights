@@ -434,7 +434,7 @@ const FlightOffersList = () => {
         {/* Button to show filter on mobile */}
         <div className="block lg:hidden">
           <button
-            className="bg-custom-gradient text-white p-2 rounded"
+            className="bg-custom-gradient text-white p-2 my-1 rounded"
             onClick={() => setFilterVisible(!filterVisible)}
           >
             {filterVisible ? "Hide Filters" : "Show Filters"}

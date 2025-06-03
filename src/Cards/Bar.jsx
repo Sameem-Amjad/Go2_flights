@@ -7,7 +7,7 @@ const Bar = () => {
   const scrollLeft = () => {
     scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
   };
-
+  //sa
   const scrollRight = () => {
     scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
   };
@@ -27,7 +27,7 @@ const Bar = () => {
         {bar.map((place, index) => (
           <div
             key={index}
-            className="flex-none w-[308px] h-52 my-2 mx-2 snap-start shadow-md bg-cover bg-center flex flex-col justify-end" 
+            className="flex-none w-[308px] h-52 my-2 mx-2 snap-start shadow-md bg-cover bg-center flex flex-col justify-end"
             style={{ backgroundImage: `url(${place.image})` }}
           >
             <p className="w-full items-center bg-opacity-75 my-5 mx-2 text-white text-xl font-bold">

@@ -3,6 +3,9 @@ import { DateTime } from "luxon";
 import { CiCircleInfo, CiSquareInfo } from "react-icons/ci";
 import { TbListDetails } from "react-icons/tb";
 import axios from "axios";
+
+import { IoLocationSharp } from "react-icons/io5";
+import { MdOutlineEmojiTransportation } from "react-icons/md";
 import SemiCircleChart from "../charts/semiCircleCharts";
 import MapModal from "../components/Modal/MapModal";
 import { FcGlobe } from "react-icons/fc";
@@ -32,6 +35,8 @@ const FlightOfferCard = ({ offer, data }) => {
   const [riskDetails, setRiskDetails] = useState(false);
   const [termininalDetails, setTerminalDetails] = useState(false);
   const [additionalDetails, setAdditionalDetails] = useState(false)
+  const [nearByLocation, setNearByLocation] = useState(false)
+  const [nearByTransportOptions, setNearByTransportOptions] = useState(false)
   const [isFirstSlice, setIsFirstSlice] = useState(true);
   const [selectedRoutine, setSelectedRoutine] = useState("normal");
   const [selectedSlice, setSelectedSlice] = useState({});
@@ -376,6 +381,36 @@ const FlightOfferCard = ({ offer, data }) => {
               <CiCircleInfo size={15} />
             </button>
           </div>
+          <div className="flex sm:items-end md:items-end lg:items-end items-start gap-1 w-full lg:justify-end md:justify-end sm:justify-end justify-between flex-col-reverse sm:flex-row lg:flex-row md:flex-row">
+            <button
+              onClick={() => {
+                setAdditionalDetails(false); setRiskDetails(false); setTerminalDetails(false); setIsFirstSlice(true); setSelectedSlice(firstSlice)
+                setNearByLocation(true)
+                setNearByTransportOptions(false)
+              }}
+              className="mt-2 flex gap-1 bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600"
+            >
+              <IoLocationSharp size={15} />
+              <span className="text-[8px] text-white lg:block md:block sm:block block ">
+                Near By Location
+              </span>
+            </button>
+            <button
+              onClick={() => {
+                setAdditionalDetails(false); setRiskDetails(false); setTerminalDetails(false); setIsFirstSlice(true); setSelectedSlice(firstSlice)
+                setNearByLocation(false)
+                setNearByTransportOptions(true)
+              }}
+              className="mt-2 flex gap-1 bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600"
+            >
+              <MdOutlineEmojiTransportation size={15} />
+              <span className="text-[8px] text-white lg:block md:block sm:block block ">
+                Near By Transport Options
+              </span>
+            </button>
+
+
+          </div>
         </div>
 
         {/* Return Flight */}
@@ -502,7 +537,36 @@ const FlightOfferCard = ({ offer, data }) => {
               <CiCircleInfo size={15} />
             </button>
           </div>
+          <div className="flex sm:items-end md:items-end lg:items-end items-start gap-1 w-full lg:justify-end md:justify-end sm:justify-end justify-between flex-col-reverse sm:flex-row lg:flex-row md:flex-row">
+            <button
+              onClick={() => {
+                setAdditionalDetails(false); setRiskDetails(false); setTerminalDetails(false); setSelectedSlice(secondSlice);
+                setNearByLocation(true)
+                setNearByTransportOptions(false)
+              }}
+              className="mt-2 flex gap-1 bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600"
+            >
+              <IoLocationSharp size={15} />
+              <span className="text-[8px] text-white lg:block md:block sm:block block ">
+                Near By Location
+              </span>
+            </button>
+            <button
+              onClick={() => {
+                setAdditionalDetails(false); setRiskDetails(false); setTerminalDetails(false); setSelectedSlice(secondSlice);
+                setNearByLocation(false)
+                setNearByTransportOptions(true)
+              }}
+              className="mt-2 flex gap-1 bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600"
+            >
+              <MdOutlineEmojiTransportation size={15} />
+              <span className="text-[8px] text-white lg:block md:block sm:block block ">
+                Near By Transport Options
+              </span>
+            </button>
 
+
+          </div>
         </div>
 
         {/* Additional Info - Emissions and Refundability */}

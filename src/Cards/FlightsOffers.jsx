@@ -4,10 +4,13 @@ import { CiSquareInfo } from "react-icons/ci";
 import { TbListDetails } from "react-icons/tb";
 import { FcGlobe } from "react-icons/fc";
 import { CiCircleInfo } from "react-icons/ci";
+import { IoLocationSharp } from "react-icons/io5";
+import { MdOutlineEmojiTransportation } from "react-icons/md";
 import axios from "axios";
 import map_img from '../assets/png/map_img.jpg'
 import SemiCircleChart from "../charts/semiCircleCharts.jsx";
 import MapModal from "../components/Modal/MapModal.jsx";
+import NearbyLocations from "../pages/Flights/components/NearByLocations.jsx";
 
 const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +39,8 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [riskDetails, setRiskDetails] = useState(false);
   const [termininalDetails, setTerminalDetails] = useState(false);
   const [additionalDetails, setAdditionalDetails] = useState(false)
+  const [nearByLocation, setNearByLocation] = useState(false)
+  const [nearByTransportOptions, setNearByTransportOptions] = useState(false)
   const [riskValueDetails, setRiskValueDetails] = useState({});
   const [selectedRoutine, setSelectedRoutine] = useState("normal");
   const [selectedSlice, setSelectedSlice] = useState({})
@@ -229,12 +234,16 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
       setRiskDetails(false)
       setTerminalDetails(false)
       setAdditionalDetails(false)
+      setNearByLocation(false)
+      setNearByTransportOptions(false)
     }
     else {
       setRiskDetails(true);
       setRiskData(riskResults)
       setTerminalDetails(false)
       setAdditionalDetails(false)
+      setNearByLocation(false)
+      setNearByTransportOptions(false);
     }
     console.log("Risk Results:", riskResults);
 
@@ -461,6 +470,8 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                             setRiskDetails(false);
                             setTerminalDetails(true);
                             setSelectedSlice(slice);
+                            setNearByLocation(false)
+                            setNearByTransportOptions(false)
                             setSelectedSliceIndex(sliceIndex);
                           }}
                           className={`mt-2 ${baseBtn} ${isSelected ? "bg-green-400 hover:bg-green-600 text-white" : "bg-green-200 text-white hover:bg-green-400 " + inactiveStyle
@@ -489,12 +500,15 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                           </span>
                         </button>
                       </div>
+
                       <button
                         onClick={() => {
                           setAdditionalDetails(true);
                           setTerminalDetails(false);
                           setSelectedSlice(slice);
                           setRiskDetails(false);
+                          setNearByLocation(false)
+                          setNearByTransportOptions(false)
                           setSelectedSliceIndex(sliceIndex);
                         }}
                         className={`${baseBtn}  ${isSelected ? "bg-blue-400 hover:bg-blue-600 text-white" : "bg-blue-200 text-white hover:bg-blue-400 " + inactiveStyle
@@ -507,6 +521,40 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                   );
                 })}
               </div>
+
+            </div>
+            <div className="flex sm:items-end md:items-end lg:items-end items-start gap-1 w-full lg:justify-end md:justify-end sm:justify-end justify-between flex-col-reverse sm:flex-row lg:flex-row md:flex-row">
+              <button
+                onClick={() => {
+                  setAdditionalDetails(false);
+                  setTerminalDetails(false);
+                  setRiskDetails(false);
+                  setNearByLocation(true)
+                  setNearByTransportOptions(false)
+                }}
+                className="mt-2 flex gap-1 bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600"
+              >
+                <IoLocationSharp size={15} />
+                <span className="text-[8px] text-white lg:block md:block sm:block block ">
+                  Near By Location
+                </span>
+              </button>
+              <button
+                onClick={() => {
+                  setAdditionalDetails(false);
+                  setTerminalDetails(false);
+                  setRiskDetails(false);
+                  setNearByLocation(false)
+                  setNearByTransportOptions(true)
+                }}
+                className="mt-2 flex gap-1 bg-blue-500 text-white text-xs px-3 py-1 rounded hover:bg-blue-600"
+              >
+                <MdOutlineEmojiTransportation size={15} />
+                <span className="text-[8px] text-white lg:block md:block sm:block block ">
+                  Near By Transport Options
+                </span>
+              </button>
+
 
             </div>
             <div className={` ${riskDetails ? 'flex w-full flex-col gap-5' : 'hidden'}  items-center justify-between text-gray-600 shadow-lg  rounded-lg p-2 mt-4`}>
@@ -690,7 +738,13 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
 
                     );
                   })}
-                </div> : null
+                </div> : nearByLocation ?
+                  <div
+                    className={`${nearByLocation ? 'flex w-full flex-col gap-3 p-3' : 'hidden'
+                      } text-gray-700 shadow-md rounded-lg mt-2 `}
+                  >
+                    <NearbyLocations />
+                  </div> : null
             }
           </div>
 

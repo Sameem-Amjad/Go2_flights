@@ -13,6 +13,7 @@ import {
 import { FlightsProvider } from "./Context/FlightsContext.jsx";
 import { ToastContainer } from "react-toastify";
 import FlightOffersList from "./pages/Flights/Flights.jsx";
+import { LoadScript } from "@react-google-maps/api";
 
 const router = createBrowserRouter([
   {
@@ -49,12 +50,14 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
+const libraries = ["places", "geometry"];
 function App() {
   return (
     <>
       <FlightsProvider>
-        <RouterProvider router={router} />
+        <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY} libraries={libraries}>
+          <RouterProvider router={router} />
+        </LoadScript>
       </FlightsProvider>
       <ToastContainer />
     </>

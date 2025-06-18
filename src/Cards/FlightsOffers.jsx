@@ -11,6 +11,7 @@ import map_img from '../assets/png/map_img.jpg'
 import SemiCircleChart from "../charts/semiCircleCharts.jsx";
 import MapModal from "../components/Modal/MapModal.jsx";
 import NearbyLocations from "../pages/Flights/components/NearByLocations.jsx";
+import NearByTransportOption from "../pages/Flights/components/NearByTransportOption.jsx";
 
 const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [showModal, setShowModal] = useState(false);
@@ -40,6 +41,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [termininalDetails, setTerminalDetails] = useState(false);
   const [additionalDetails, setAdditionalDetails] = useState(false)
   const [nearByLocation, setNearByLocation] = useState(false)
+
   const [nearByTransportOptions, setNearByTransportOptions] = useState(false)
   const [riskValueDetails, setRiskValueDetails] = useState({});
   const [selectedRoutine, setSelectedRoutine] = useState("normal");
@@ -744,7 +746,14 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                       } text-gray-700 shadow-md rounded-lg mt-2 `}
                   >
                     <NearbyLocations />
-                  </div> : null
+                  </div> : nearByTransportOptions ?
+                    <div
+                      className={`${nearByTransportOptions ? 'flex w-full flex-col gap-3 p-3' : 'hidden'
+                        } text-gray-700 shadow-md rounded-lg mt-2 `}
+                    >
+                      <NearByTransportOption destination={`${origin?.latitude},${origin?.longitude}`} />
+                    </div> : null
+
             }
           </div>
 
@@ -896,7 +905,7 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
         )}
         {
           showMapModal && (
-            <MapModal slices={slices} setShowMapModal={setShowMapModal} />
+            <MapModal slices={slices} setShowMapModal={setShowMapModal} showMapModal={showMapModal} />
           )
         }
       </div>

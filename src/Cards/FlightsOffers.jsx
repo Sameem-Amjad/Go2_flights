@@ -12,6 +12,8 @@ import SemiCircleChart from "../charts/semiCircleCharts.jsx";
 import MapModal from "../components/Modal/MapModal.jsx";
 import NearbyLocations from "../pages/Flights/components/NearByLocations.jsx";
 import NearByTransportOption from "../pages/Flights/components/NearByTransportOption.jsx";
+import TransitMap from "../pages/Flights/components/TransitMap.jsx";
+import TransportOption from "../pages/Flights/components/TransportOption.jsx";
 
 const FlightOfferCard = ({ keyindex, offer, data }) => {
   const [showModal, setShowModal] = useState(false);
@@ -751,7 +753,12 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                       className={`${nearByTransportOptions ? 'flex w-full flex-col gap-3 p-3' : 'hidden'
                         } text-gray-700 shadow-md rounded-lg mt-2 `}
                     >
-                      <NearByTransportOption destination={`${origin?.latitude},${origin?.longitude}`} />
+                      {/* <NearByTransportOption destination={`${origin?.latitude},${origin?.longitude}`} /> */}
+                      {/* <TransitMap origin={{ lat: 40.7580, lng: -73.9855 }} destination={{ lat: 40.748817, lng: -73.985428 }} /> */}
+                      <TransportOption
+                        // destination={`${origin?.latitude},${origin?.longitude}`}
+                        destination="48.1351253,11.5819806"
+                      />
                     </div> : null
 
             }

@@ -756,8 +756,8 @@ const FlightOfferCard = ({ keyindex, offer, data }) => {
                       {/* <NearByTransportOption destination={`${origin?.latitude},${origin?.longitude}`} /> */}
                       {/* <TransitMap origin={{ lat: 40.7580, lng: -73.9855 }} destination={{ lat: 40.748817, lng: -73.985428 }} /> */}
                       <TransportOption
-                        // destination={`${origin?.latitude},${origin?.longitude}`}
-                        destination="48.1351253,11.5819806"
+                        destination={`${origin?.latitude},${origin?.longitude}`}
+                      // destination="48.1351253,11.5819806"
                       />
                     </div> : null
 

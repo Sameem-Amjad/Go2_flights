@@ -71,10 +71,10 @@ const TransportOption = ({ destination: initialDestination = "", origin: initial
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const coords = `${position.coords.latitude}, ${position.coords.longitude}`;
-                    // setOrigin(coords);
-                    setOrigin("52.52000659999999,13.404954"); // Example coordinates for Berlin
-                    // const name = await reverseGeocode(coords, GEOCODE_API_KEY);
-                    const name = await reverseGeocode("52.52000659999999,13.404954", GEOCODE_API_KEY);
+                    setOrigin(coords);
+                    // setOrigin("52.52000659999999,13.404954"); // Example coordinates for Berlin
+                    const name = await reverseGeocode(coords, GEOCODE_API_KEY);
+                    // const name = await reverseGeocode("52.52000659999999,13.404954", GEOCODE_API_KEY);
                     setLocationNames((prev) => ({ ...prev, originName: name }));
                 },
                 () => console.error("Unable to access your location.")

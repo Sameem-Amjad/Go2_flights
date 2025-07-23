@@ -224,8 +224,8 @@ const TransportOption = ({ destination: initialDestination = "", origin: initial
                         {loading ? (
                             <LoaderCircleIcon className="animate-spin" />
                         ) : drivingData ? (
-                            // <DrivingCard drivingData={drivingData} />
-                            <p className="text-gray-500">Driving directions coming soon.</p>
+                            <DrivingCard drivingData={drivingData} />
+                            // <p className="text-gray-500">Driving directions coming soon.</p>
                         ) : (
                             <p className="text-red-500">No driving directions available.</p>
                         )}

@@ -9,10 +9,12 @@ import {
 } from "react-icons/fa";
 import { IoCarSharp } from "react-icons/io5";
 import TransitRouteMapModal from "../components/Map/TransitMapRoute";
+import { IoMdBicycle } from "react-icons/io";
 
 const modeIcons = {
     TRANSIT: <FaBus className="text-blue-600" />,
     WALKING: <FaWalking className="text-green-600" />,
+    BICYCLE: <IoMdBicycle className="text-orange-600" />,
     DRIVING: <IoCarSharp className="text-yellow-600" />,
     TRAIN: <FaTrain className="text-purple-600" />,
 };
@@ -71,7 +73,7 @@ const BiCycleCard = ({ bicyclingData }) => {
                                                         className="flex gap-3 items-start bg-gray-50 p-2 rounded-md"
                                                     >
                                                         <div className="mt-1 text-xl">
-                                                            {modeIcons[step.travel_mode] || <FaWalking />}
+                                                            {modeIcons[step.travel_mode] || <IoMdBicycle className="text-orange-600" />}
                                                         </div>
                                                         <div className="text-sm text-gray-700">
                                                             <p className="font-medium">

@@ -240,8 +240,8 @@ const TransportOption = ({ destination: initialDestination = "", origin: initial
                         {loading ? (
                             <LoaderCircleIcon className="animate-spin" />
                         ) : walkingData ? (
-                            // <WalkingCard walkingData={walkingData} />
-                            <p className="text-gray-500">Walking directions coming soon.</p>
+                            <WalkingCard walkingData={walkingData} />
+                            // <p className="text-gray-500">Walking directions coming soon.</p>
                         ) : (
                             <p className="text-red-500">No walking directions available.</p>
                         )}
@@ -257,8 +257,8 @@ const TransportOption = ({ destination: initialDestination = "", origin: initial
                         {loading ? (
                             <LoaderCircleIcon className="animate-spin" />
                         ) : bicyclingData ? (
-                            // <BiCycleCard bicyclingData={bicyclingData} />
-                            <p className="text-gray-500">Bicycling directions coming soon.</p>
+                            <BiCycleCard bicyclingData={bicyclingData} />
+                            // <p className="text-gray-500">Bicycling directions coming soon.</p>
                         ) : (
                             <p className="text-red-500">No bicycling directions available.</p>
                         )}

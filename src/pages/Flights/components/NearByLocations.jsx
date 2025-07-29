@@ -138,12 +138,21 @@ const NearbyLocations = () => {
                 fetchNearbyLocations(lat, lng, 10);
             },
             () => {
-                const lat = 28.6139;
-                const lng = 77.2090;
+                const lat = 25.276987;
+                const lng = 55.296249;
                 setCurrentCoordinates({ lat, lng });
-                setLocation("New Delhi");
+                setLocation("Dubai");
                 fetchNearbyLocations(lat, lng, 10);
-                toast.error("Geolocation denied or unavailable. Using default location (New Delhi).");
+
+                toast.custom((t) => (
+                    <div
+                        className={`${t.visible ? 'animate-enter' : 'animate-leave'
+                            } bg-green-100 text-green-800 px-4 py-2 rounded shadow-md`}
+                    >
+                        Please allow location access.
+                    </div>
+                ));
+
             }
         );
     }, []);

@@ -148,7 +148,7 @@ const NearbyLocations = () => {
 
                 toast.custom((t) => (
                     <div
-                        className={`${t.visible ? 'animate-enter' : 'animate-leave'
+                        className={`transition-all duration-1000 transform ${t.visible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                             } flex items-center gap-3 bg-gradient-to-r from-green-50 to-green-100 text-green-800 px-4 py-3 rounded-lg shadow-lg border border-green-200`}
                     >
                         <MdOutlineLocationOn className="text-2xl" />

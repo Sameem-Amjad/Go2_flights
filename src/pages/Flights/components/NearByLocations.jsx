@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { GoogleMap, Autocomplete, Marker, Polyline } from "@react-google-maps/api"; // Added Marker, Polyline
 import { SearchIcon, XCircle } from "lucide-react"; // Added XCircle for close button
+import { MdOutlineLocationOn } from "react-icons/md";
+
 import toast from "react-hot-toast";
 
 const containerStyle = {
@@ -147,9 +149,10 @@ const NearbyLocations = () => {
                 toast.custom((t) => (
                     <div
                         className={`${t.visible ? 'animate-enter' : 'animate-leave'
-                            } bg-green-100 text-green-800 px-4 py-2 rounded shadow-md`}
+                            } flex items-center gap-3 bg-gradient-to-r from-green-50 to-green-100 text-green-800 px-4 py-3 rounded-lg shadow-lg border border-green-200`}
                     >
-                        Please allow location access.
+                        <MdOutlineLocationOn className="text-2xl" />
+                        <span className="text-sm font-medium">Please allow location access.</span>
                     </div>
                 ));
 
